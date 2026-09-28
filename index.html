@@ -143,7 +143,7 @@
 
   /* Trajetória em escala de tempo */
   .gantt { margin-top: 2.5rem; }
-  .g-axis, .g-row { display: grid; grid-template-columns: 19rem minmax(0, 1fr); gap: 0 2rem; }
+  .g-axis, .g-row { display: grid; grid-template-columns: 26rem minmax(0, 1fr); gap: 0 2.5rem; }
   .g-axis { height: 1.5rem; }
   .g-scale { position: relative; }
   .g-scale span { position: absolute; top: 0; padding-left: .3rem; font: 500 .8rem var(--sans); color: var(--slate); }
@@ -164,6 +164,16 @@
     .g-axis > div:first-child { display: none; }
     .g-row { grid-template-columns: 1fr; gap: .6rem; }
   }
+
+
+  .g-list { margin: .6rem 0 0; padding-left: 1.1rem; font-size: .95rem; color: var(--ink); }
+  .g-list li { margin: .3rem 0; }
+  .g-row.lead { padding-top: 1.25rem; padding-bottom: 1.5rem; }
+  .g-row.lead .g-text strong { font-size: 1.25rem; }
+  .g-mark { position: absolute; top: .3rem; width: 1rem; height: 1rem; margin-left: -.5rem; background: var(--tag); outline: 2px solid var(--ink); transform: rotate(45deg) scale(.85); }
+  .g-legend { margin: 1.25rem 0 0; font: 500 .85rem var(--sans); color: var(--slate); display: flex; align-items: center; gap: .6rem; }
+  .g-legend i { display: inline-block; width: .8rem; height: .8rem; background: var(--tag); outline: 2px solid var(--ink); transform: rotate(45deg) scale(.85); }
+  .g-row.study .g-bar { background: var(--line); height: .35rem; top: .62rem; }
 
   /* Método e formação */
   .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem clamp(2rem, 6vw, 5rem); margin-top: 2rem; }
@@ -344,27 +354,42 @@
         </div>
       </div>
 
-      <div class="g-row">
-        <div class="g-text"><strong>Analista de Inteligência Comercial</strong><span class="org">Yamá Cosméticos</span><span class="when">set/2025 até hoje</span><span class="what">Business intelligence, monitoramento de preços, apuração de campanhas de incentivo e governança de dados do ERP.</span></div>
+      <div class="g-row lead">
+        <div class="g-text">
+          <strong>Analista de Inteligência Comercial</strong><span class="org">Yamá Cosméticos</span><span class="when">set/2025 até hoje, mais de um ano</span>
+          <span class="what">Faço a inteligência comercial da Diretoria Comercial, atendendo a operação de vendas, as gerências regionais e os relatórios executivos.</span>
+          <ul class="g-list">
+            <li>Modelagem e painéis em Power BI: modelo em estrela, registro de regras de negócio e páginas como a Curva ABC de produtos.</li>
+            <li>Monitoramento de preços da concorrência em seis canais, com coleta automatizada e um relatório único.</li>
+            <li>Apuração mensal de campanhas de incentivo, com auditoria de cada fórmula, e previsão de vendas para o S&amp;OP.</li>
+            <li>Governança de dados do ERP Protheus e ferramentas web internas sobre Supabase.</li>
+            <li>Padrões de documentação e de continuidade, para que as ferramentas não dependam de uma pessoa só.</li>
+          </ul>
+        </div>
         <div class="g-track" aria-hidden="true"><span class="g-bar now" style="left:81.16%;width:18.7%"></span></div>
       </div>
       <div class="g-row">
-        <div class="g-text"><strong>Coordenador de Backoffice e Inteligência de Mercado</strong><span class="org">Pharmexx</span><span class="when">dez/2024 a jul/2025</span><span class="what">Célula nacional de backoffice e governança de dados no canal Farma.</span></div>
-        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:68.12%;width:11.59%"></span></div>
+        <div class="g-text"><strong>Coordenador de Backoffice e Inteligência de Mercado</strong><span class="org">Pharmexx</span><span class="when">dez/2024 a jul/2025, 8 meses</span><span class="what">Liderança da célula nacional de backoffice e da governança de dados no canal Farma. Pipelines, KPIs e segmentação de PDVs alimentaram um painel apresentado em convenção nacional, em abril de 2025.</span></div>
+        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:68.12%;width:11.59%"></span><span class="g-mark" style="left:73.9%" title="Convenção nacional, abr/2025"></span></div>
       </div>
       <div class="g-row">
-        <div class="g-text"><strong>Analista de Inteligência Comercial e Mercado</strong><span class="org">Super Troco</span><span class="when">set/2023 a jul/2024</span></div>
+        <div class="g-text"><strong>Analista de Inteligência Comercial e Mercado</strong><span class="org">Super Troco</span><span class="when">set/2023 a jul/2024, 11 meses</span></div>
         <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:47.1%;width:15.22%"></span></div>
       </div>
       <div class="g-row">
-        <div class="g-text"><strong>Analista de Inteligência de Mercado e E-commerce</strong><span class="org">Grupo DBN</span><span class="when">abr/2022 a set/2023</span></div>
+        <div class="g-text"><strong>Analista de Inteligência de Mercado e E-commerce</strong><span class="org">Grupo DBN</span><span class="when">abr/2022 a set/2023, 18 meses</span></div>
         <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:21.74%;width:25.36%"></span></div>
       </div>
       <div class="g-row">
-        <div class="g-text"><strong>Analista de Dados</strong><span class="org">DHL Express</span><span class="when">abr/2021 a dez/2021</span></div>
+        <div class="g-text"><strong>Analista de Dados</strong><span class="org">DHL Express</span><span class="when">abr/2021 a dez/2021, 9 meses</span></div>
         <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:4.35%;width:13.04%"></span></div>
       </div>
+      <div class="g-row study">
+        <div class="g-text"><strong>Estudo em paralelo</strong><span class="org">Power BI, Python e ciência da computação</span><span class="when">2023 e 2024</span></div>
+        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:34.78%;width:34.78%"></span><span class="g-mark" style="left:43.5%" title="Power BI para BI e Python Fundamentos, 2023"></span><span class="g-mark" style="left:60.9%" title="Python para Análise de Dados e Ciência da Computação com Python, 2024"></span></div>
+      </div>
     </div>
+    <p class="g-legend"><i aria-hidden="true"></i> Losango amarelo: marco ou curso concluído no período.</p>
 
     <h3 style="margin:3.5rem 0 0;font:700 1.25rem/1.2 var(--sans)">Formação em dados</h3>
     <ul class="courses">
@@ -381,10 +406,9 @@
     <h2 id="t-contato">Vamos conversar sobre dados comerciais?</h2>
     <p>Inteligência comercial, BI, precificação, previsão de vendas e automação de análises. Escolha o canal que preferir.</p>
     <div class="contact-links">
-      <!-- PREENCHER: troque os dois valores abaixo. Links com "PREENCHER" ficam ocultos automaticamente. -->
-      <a class="btn" data-pending href="mailto:PREENCHER-SEU-EMAIL">E-mail</a>
+      <!-- PREENCHER: troque o valor do LinkedIn abaixo. Links com "PREENCHER" ficam ocultos automaticamente. -->
+      <a class="btn" href="mailto:caiomancuso85@gmail.com">E-mail</a>
       <a class="btn" data-pending href="https://www.linkedin.com/in/PREENCHER-SEU-PERFIL/" rel="noopener">LinkedIn</a>
-      <a class="btn" href="https://github.com/caiomancuso" rel="noopener">GitHub</a>
     </div>
     <p class="side" data-pending-wrap>Também ensino Excel do zero à análise de dados. <a data-pending href="PREENCHER-LINK-DO-CURSO" rel="noopener">Ver o curso na Hotmart</a>.</p>
   </div>
