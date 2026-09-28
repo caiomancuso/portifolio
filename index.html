@@ -1,472 +1,626 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Caio Mancuso — Inteligência Comercial</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caio Mancuso, inteligência comercial e dados</title>
+<meta name="description" content="Analista de inteligência comercial. Conecto sell-in, sell-out, preço e cobertura em análises, dashboards e ferramentas próprias, da coleta à decisão.">
+<meta property="og:title" content="Caio Mancuso, inteligência comercial e dados">
+<meta property="og:description" content="Da coleta à decisão: scrapers, bases estruturadas, modelos em Power BI, previsão de vendas e ferramentas próprias para times comerciais.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23FFD23F' d='M2 6h20l8 10-8 10H2z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Source+Serif+4:opsz,wght@8..60,400..600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
 <style>
-  :root{
-    --bg:#F1F1EE;
-    --surface:#FFFFFF;
-    --ink:#14181F;
-    --muted:#5B6169;
-    --muted-2:#8B9098;
-    --accent:#C1421A;
-    --accent-tint:#F5E3DB;
-    --accent-2:#2B6CB0;
-    --accent-2-tint:#DEE9F4;
-    --line:#DBDBD6;
-    --panel:#14181F;
-    --panel-line:#2A2F38;
-    --radius:3px;
+  :root {
+    --paper: #F2F4F7;
+    --ink: #101A2E;
+    --slate: #566175;
+    --line: #D3D9E2;
+    --soft: #B9C1CD;
+    --tag: #FFD23F;
+    --sans: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --pad: clamp(1.25rem, 4vw, 3rem);
+    --arrow: polygon(0 0, calc(100% - .7rem) 0, 100% 50%, calc(100% - .7rem) 100%, 0 100%);
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased;}
-  h1,h2,h3{font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.01em;}
-  .mono{font-family:'IBM Plex Mono', monospace;}
-  .wrap{max-width:1100px; margin:0 auto; padding:0 32px;}
-  a{color:inherit;}
-  img{max-width:100%; display:block;}
-  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
-  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
 
-  header{position:sticky; top:0; z-index:50; background:rgba(241,241,238,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
-  nav{display:flex; align-items:center; justify-content:space-between; padding:18px 32px; max-width:1100px; margin:0 auto;}
-  .brand{font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:19px;}
-  .brand span{display:block; font-family:'IBM Plex Mono', monospace; font-weight:400; font-size:10.5px; letter-spacing:0.08em; color:var(--muted); text-transform:uppercase; margin-top:2px;}
-  .navlinks{display:none; gap:26px; font-size:14px; color:var(--muted);}
-  @media(min-width:900px){.navlinks{display:flex;}}
-  .navlinks a{text-decoration:none;}
-  .navlinks a:hover{color:var(--accent);}
-  .cta-btn{background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:var(--radius); font-size:14px; text-decoration:none; font-weight:500; white-space:nowrap;}
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: auto; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
-  .hero{padding:64px 0 0;}
-  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; display:flex; align-items:center; gap:8px;}
-  .eyebrow::before{content:''; width:16px; height:1px; background:var(--accent);}
-  .hero h1{font-size:clamp(32px,5vw,54px); line-height:1.1; max-width:780px; margin-bottom:22px;}
-  .hero p.lede{font-size:17.5px; color:var(--muted); max-width:580px; margin-bottom:34px;}
-  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:48px;}
-  .btn-primary{background:var(--accent); color:#fff; padding:13px 24px; border-radius:var(--radius); text-decoration:none; font-weight:500; font-size:15px;}
-  .btn-secondary{border:1px solid var(--line); padding:13px 24px; border-radius:var(--radius); text-decoration:none; font-weight:500; font-size:15px;}
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 400 1.0625rem/1.65 var(--serif); -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+  a:hover { background: var(--tag); }
+  :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .wrap { max-width: 76rem; margin: 0 auto; padding: 0 var(--pad); }
 
-  /* SIGNATURE: monitoring panel */
-  .panel{background:var(--panel); border-radius:var(--radius); padding:0; margin-bottom:0; color:#fff; overflow:hidden;}
-  .panel-head{display:flex; justify-content:space-between; align-items:center; padding:16px 22px; border-bottom:1px solid var(--panel-line);}
-  .panel-title{font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:#8B9098;}
-  .panel-live{display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6FCF97;}
-  .livedot{width:6px; height:6px; border-radius:50%; background:#6FCF97; animation:pulse 1.6s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.25;}}
-  .channels{display:grid; grid-template-columns:1fr; }
-  @media(min-width:700px){.channels{grid-template-columns:1fr 1fr 1fr;}}
-  .channel{padding:22px; border-top:1px solid var(--panel-line);}
-  @media(min-width:700px){.channel{border-top:none; border-left:1px solid var(--panel-line);} .channel:first-child{border-left:none;}}
-  .channel .cname{font-size:16px; font-weight:600; font-family:'Space Grotesk';margin-bottom:6px;}
-  .channel .cdesc{font-size:12.5px; color:#9BA1A9; font-family:'IBM Plex Mono',monospace;}
-  .panel-foot{padding:14px 22px; border-top:1px solid var(--panel-line); font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6C727B; display:flex; gap:10px; flex-wrap:wrap;}
-  .panel-foot .step:not(:last-child)::after{content:'→'; margin-left:10px; color:#3A404A;}
+  .skip { position: absolute; left: var(--pad); top: -4rem; background: var(--tag); color: var(--ink); padding: .6rem 1rem; font: 600 .95rem var(--sans); z-index: 10; }
+  .skip:focus { top: .75rem; }
 
-  section{padding:68px 0; border-bottom:1px solid var(--line);}
-  .section-head{margin-bottom:40px;}
-  .section-tag{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-2); margin-bottom:10px;}
-  .section-head h2{font-size:clamp(25px,3.2vw,34px);}
-  .section-head p{color:var(--muted); max-width:560px; margin-top:10px; font-size:15px;}
+  /* Etiqueta de gôndola: aponta para a direita, como o fluxo do dado */
+  .tag {
+    display: inline-flex; align-items: center; gap: .5rem; height: 2.1rem; padding: 0 1.4rem 0 .8rem;
+    background: var(--tag); color: var(--ink); font: 600 .95rem/1 var(--sans); clip-path: var(--arrow);
+  }
+  .tag b { font-weight: 800; }
+  .chip { appearance: none; border: 0; cursor: pointer; background: var(--line); }
+  .chip:hover { background: var(--soft); }
+  .chip[aria-pressed="true"] { background: var(--tag); }
 
-  .about-grid{display:grid; grid-template-columns:1fr; gap:38px;}
-  @media(min-width:860px){.about-grid{grid-template-columns:1.3fr 1fr;}}
-  .about-text p{color:var(--muted); margin-bottom:15px; font-size:15px;}
-  .about-text strong{color:var(--ink);}
-  .stackbox{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px;}
-  .stackbox h3{font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:15px; color:var(--muted);}
-  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
-  .chip{font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--accent-2-tint); color:var(--accent-2); padding:6px 11px; border-radius:2px;}
+  /* Cabeçalho */
+  .site-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.5rem 0; flex-wrap: wrap; }
+  .wordmark { font: 700 1.15rem/1 var(--sans); letter-spacing: -.01em; text-decoration: none; display: inline-flex; align-items: center; gap: .6rem; }
+  .wordmark::before { content: ""; width: 1.4rem; height: 1rem; background: var(--tag); clip-path: polygon(0 0, 70% 0, 100% 50%, 70% 100%, 0 100%); }
+  .wordmark:hover { background: none; }
+  .site-nav { display: flex; gap: 1.5rem; font: 500 .95rem var(--sans); flex-wrap: wrap; }
+  .site-nav a { text-decoration: none; padding: .2rem 0; }
+  .site-nav a:hover { background: none; text-decoration: underline; text-decoration-thickness: 2px; text-decoration-color: var(--tag); }
 
-  .spec-grid{display:grid; grid-template-columns:1fr; gap:1px; background:var(--line); border:1px solid var(--line);}
-  @media(min-width:640px){.spec-grid{grid-template-columns:1fr 1fr;}}
-  @media(min-width:980px){.spec-grid{grid-template-columns:1fr 1fr 1fr;}}
-  .spec-cell{background:var(--surface); padding:26px 22px;}
-  .spec-num{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--muted-2); margin-bottom:12px;}
-  .spec-cell h3{font-size:16.5px; margin-bottom:7px; font-weight:600;}
-  .spec-cell p{font-size:13.5px; color:var(--muted);}
-  .spec-tag{display:inline-block; margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--accent); background:var(--accent-tint); padding:3px 8px; border-radius:2px;}
+  /* Abertura */
+  .hero { padding: clamp(3rem, 9vw, 7rem) 0 clamp(3rem, 7vw, 5rem); }
+  h1 { margin: 0; max-width: 17ch; font: 700 clamp(2.5rem, 6.4vw, 5.4rem)/1 var(--sans); letter-spacing: -.035em; }
+  .lede { max-width: 30rem; margin: clamp(1.75rem, 4vw, 3rem) 0 0 auto; font-size: 1.15rem; }
+  @media (max-width: 52rem) { .lede { margin-left: 0; } }
 
-  .case{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:30px; margin-bottom:20px;}
-  .case-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:18px; flex-wrap:wrap;}
-  .case-top h3{font-size:20px;}
-  .case-status{font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; padding:5px 10px; border-radius:2px; white-space:nowrap;}
-  .status-live{background:var(--accent-2-tint); color:var(--accent-2);}
-  .status-progress{background:var(--accent-tint); color:var(--accent);}
-  .case-body{display:grid; grid-template-columns:1fr; gap:24px;}
-  .case-body.has-img{grid-template-columns:1fr;}
-  @media(min-width:760px){.case-body.has-img{grid-template-columns:1.3fr 1fr;}}
-  .case-cols{display:grid; grid-template-columns:1fr; gap:18px;}
-  @media(min-width:600px){.case-cols{grid-template-columns:1fr 1fr 1fr;}}
-  .case-col .k{font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted-2); margin-bottom:7px;}
-  .case-col p, .case-col ul{font-size:14px; color:var(--muted);}
-  .case-col ul{padding-left:17px;}
-  .case-col li{margin-bottom:4px;}
-  .case-img{border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; align-self:start;}
-  .case-img img{width:100%; height:auto;}
-  .case-tech{margin-top:16px; padding-top:16px; border-top:1px solid var(--line); font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--accent-2);}
+  /* Seções */
+  .block { padding: clamp(3rem, 7vw, 5.5rem) 0; border-top: 1px solid var(--line); }
+  h2 { margin: 0 0 1rem; font: 700 clamp(1.8rem, 3.4vw, 2.7rem)/1.08 var(--sans); letter-spacing: -.025em; max-width: 22ch; }
+  .intro { max-width: 38rem; margin: 0 0 2rem; }
 
-  .side-note{background:var(--accent-2-tint); border-left:2px solid var(--accent-2); padding:13px 18px; font-size:13px; color:#204E7A; margin-bottom:30px; border-radius:0 2px 2px 0;}
-  .init-grid{display:grid; grid-template-columns:1fr; gap:20px;}
-  @media(min-width:760px){.init-grid{grid-template-columns:1fr 1fr;}}
-  .init-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
-  .init-card .init-body{padding:24px;}
-  .init-card h3{font-size:17px; margin-bottom:5px;}
-  .init-card .init-tag{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2); margin-bottom:10px; display:block;}
-  .init-card p{font-size:13.5px; color:var(--muted);}
+  /* Filtro por etapa */
+  .filter { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: 0 0 2.5rem; }
+  .filter span { font: 500 .95rem var(--sans); color: var(--slate); margin-right: .4rem; }
+  html:not(.js) .filter { display: none; }
 
-  /* carousel */
-  .carousel{position:relative; background:#0E1116;}
-  .carousel-track{display:flex; transition:transform 0.35s ease;}
-  .carousel-track img{width:100%; flex-shrink:0;}
-  .carousel-nav{position:absolute; top:50%; transform:translateY(-50%); background:rgba(20,24,31,0.7); color:#fff; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;}
-  .carousel-nav.prev{left:10px;} .carousel-nav.next{right:10px;}
-  .carousel-dots{position:absolute; bottom:10px; left:0; right:0; display:flex; justify-content:center; gap:6px;}
-  .cdot{width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.4); cursor:pointer; border:none;}
-  .cdot.active{background:#fff;}
+  /* Visualizador de casos */
+  .viewer { display: block; }
+  .js .viewer { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+  html:not(.js) .tabs { display: none; }
+  .tabs { display: flex; flex-direction: column; gap: .15rem; position: sticky; top: 1rem; }
+  .tab {
+    appearance: none; background: none; border: 0; cursor: pointer; text-align: left; color: var(--ink);
+    position: relative; padding: .95rem 1rem .95rem 2.1rem; transition: opacity .2s;
+  }
+  .tab::before {
+    content: ""; position: absolute; left: 0; top: 1.3rem; width: .9rem; height: .75rem; background: var(--soft);
+    clip-path: polygon(0 0, 60% 0, 100% 50%, 60% 100%, 0 100%); transition: width .2s, background .2s;
+  }
+  .tab:hover::before { background: var(--slate); }
+  .tab[aria-selected="true"]::before { background: var(--tag); width: 1.35rem; height: 1.05rem; top: 1.15rem; outline: 0; }
+  .tab .t { display: block; font: 700 1.4rem/1.2 var(--sans); letter-spacing: -.015em; }
+  .tab .hl { box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .tab[aria-selected="true"] .hl { background: linear-gradient(transparent 62%, var(--tag) 62%); }
+  .tab .m { display: block; margin-top: .3rem; font: 500 .85rem var(--sans); color: var(--slate); }
+  .tab.dim { opacity: .3; }
 
-  .diff-list{display:grid; grid-template-columns:1fr; gap:1px; background:var(--line); border:1px solid var(--line);}
-  @media(min-width:760px){.diff-list{grid-template-columns:1fr 1fr;}}
-  .diff-item{background:var(--surface); padding:24px; display:flex; gap:15px;}
-  .diff-item .idx{font-family:'IBM Plex Mono',monospace; color:var(--accent); font-size:13px; flex-shrink:0;}
-  .diff-item h3{font-size:15.5px; margin-bottom:5px;}
-  .diff-item p{font-size:13px; color:var(--muted);}
+  .panel { min-width: 0; }
+  .panel + .panel { margin-top: 4rem; }
+  .panel h3 { margin: 0 0 1rem; font: 700 1.6rem/1.15 var(--sans); letter-spacing: -.02em; }
+  .js .panel h3 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .figure { margin: 0 0 1.75rem; background: #fff; padding: 1rem 1rem .75rem; }
+  html:not(.js) .figure { display: none; }
+  .figure svg { display: block; width: 100%; height: auto; }
+  .figure figcaption { margin-top: .5rem; font: 500 .8rem var(--sans); color: var(--slate); }
+  .panel p { margin: 0 0 1rem; max-width: 38rem; }
+  .panel p strong { font: 700 1rem var(--sans); }
+  .panel .stack { margin: 1.25rem 0 0; font: 500 .9rem/1.5 var(--sans); color: var(--slate); }
+  @media (prefers-reduced-motion: no-preference) {
+    .panel:not([hidden]) { animation: swap .28s ease-out; }
+    @keyframes swap { from { opacity: 0; transform: translateY(.5rem); } to { opacity: 1; transform: none; } }
+  }
 
-  .cert-grid{display:grid; grid-template-columns:1fr; gap:12px;}
-  @media(min-width:760px){.cert-grid{grid-template-columns:1fr 1fr;}}
-  .cert-row{display:flex; justify-content:space-between; align-items:center; background:var(--surface); border:1px solid var(--line); padding:15px 20px; border-radius:var(--radius);}
-  .cert-name{font-size:14px; font-weight:500;}
-  .cert-inst{font-size:12.5px; color:var(--muted);}
-  .cert-year{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted-2);}
-  .cert-footnote{margin-top:18px; font-size:12.5px; color:var(--muted-2);}
+  @media (max-width: 56rem) {
+    .js .viewer { grid-template-columns: 1fr; gap: 1.5rem; }
+    .tabs { position: static; flex-direction: row; overflow-x: auto; gap: .5rem; padding-bottom: .5rem; scroll-snap-type: x mandatory; }
+    .tab { flex: 0 0 15rem; scroll-snap-align: start; border: 1px solid var(--line); padding: 1rem 1rem 1rem 2.1rem; }
+    .tab .m { display: none; }
+    .tab[aria-selected="true"] { border-color: var(--ink); }
+  }
 
-  .contact-note{background:var(--accent-tint); border:1px solid #E3C4B2; color:#8A3B1D; font-size:13px; padding:13px 18px; border-radius:var(--radius); margin-bottom:30px;}
-  .form-grid{display:grid; grid-template-columns:1fr; gap:14px; max-width:520px;}
-  @media(min-width:600px){.form-grid.two{grid-template-columns:1fr 1fr;}}
-  input, textarea{font-family:'IBM Plex Sans'; font-size:14px; padding:12px 14px; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); color:var(--ink);}
-  textarea{resize:vertical; min-height:100px;}
-  .submit-btn{background:var(--ink); color:var(--bg); border:none; padding:13px 24px; border-radius:var(--radius); font-size:14px; font-weight:500; cursor:pointer; width:fit-content;}
+  /* Ilustrações (SVG gerado por script, com dados fictícios) */
+  .sv-t { font: 500 11px var(--sans); fill: var(--slate); }
+  .sv-tb { font: 700 12px var(--sans); fill: var(--ink); }
+  .sv-tw { font: 600 12px var(--sans); fill: var(--paper); }
+  .sv-ti { font: 700 12px var(--sans); fill: var(--ink); }
+  .sv-ax { stroke: var(--ink); stroke-width: 1.5; }
+  .sv-dash { stroke: var(--slate); stroke-width: 1.2; stroke-dasharray: 4 4; fill: none; }
+  .sv-fink { fill: var(--ink); } .sv-fslate { fill: var(--slate); } .sv-fsoft { fill: var(--soft); } .sv-ftag { fill: var(--tag); }
+  .sv-fpaper { fill: var(--paper); } .sv-fwhite { fill: #fff; }
+  .sv-back { stroke: var(--ink); stroke-width: 5; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+  .sv-front { stroke: var(--tag); stroke-width: 2.5; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+  .sv-hist { stroke: var(--ink); stroke-width: 2.5; fill: none; stroke-linejoin: round; }
+  .sv-m1 { stroke: var(--slate); stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+  .sv-m2 { stroke: var(--ink); stroke-width: 2; fill: none; stroke-dasharray: 2 4; stroke-linecap: round; }
+  .sv-m3 { stroke: var(--soft); stroke-width: 3; fill: none; }
+  .sv-stroke { stroke: var(--ink); stroke-width: 1.5; }
 
-  footer{padding:32px 0; text-align:center; font-size:12.5px; color:var(--muted-2); font-family:'IBM Plex Mono',monospace;}
+  /* Trajetória em escala de tempo */
+  .gantt { margin-top: 2.5rem; }
+  .g-axis, .g-row { display: grid; grid-template-columns: 19rem minmax(0, 1fr); gap: 0 2rem; }
+  .g-axis { height: 1.5rem; }
+  .g-scale { position: relative; }
+  .g-scale span { position: absolute; top: 0; padding-left: .3rem; font: 500 .8rem var(--sans); color: var(--slate); }
+  .g-row { padding: .95rem 0; border-top: 1px solid var(--line); align-items: center; }
+  .g-text strong { display: block; font: 700 1.05rem/1.3 var(--sans); }
+  .g-text .org { display: block; }
+  .g-text .when { display: block; margin-top: .15rem; font: 500 .85rem var(--sans); color: var(--slate); font-variant-numeric: tabular-nums; }
+  .g-text .what { display: block; margin-top: .35rem; font-size: .95rem; color: var(--slate); }
+  .g-track {
+    position: relative; height: 1.6rem;
+    background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+    background-size: 17.3913% 100%;
+  }
+  .g-bar { position: absolute; top: .3rem; height: 1rem; background: var(--ink); }
+  .g-bar.now { background: var(--tag); border: 2px solid var(--ink); clip-path: polygon(0 0, calc(100% - .5rem) 0, 100% 50%, calc(100% - .5rem) 100%, 0 100%); border: 0; box-shadow: inset 0 0 0 2px var(--ink); }
+  @media (max-width: 52rem) {
+    .g-axis { display: block; }
+    .g-axis > div:first-child { display: none; }
+    .g-row { grid-template-columns: 1fr; gap: .6rem; }
+  }
 
-  .reveal{opacity:0; transform:translateY(14px); transition:opacity 0.5s ease, transform 0.5s ease;}
-  .reveal.in{opacity:1; transform:translateY(0);}
+  /* Método e formação */
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem clamp(2rem, 6vw, 5rem); margin-top: 2rem; }
+  .two h3 { margin: 0 0 .5rem; font: 700 1.25rem/1.2 var(--sans); letter-spacing: -.01em; }
+  .two p { margin: 0; }
+  @media (max-width: 52rem) { .two { grid-template-columns: 1fr; } }
+  .courses { columns: 2 18rem; column-gap: 3rem; list-style: none; margin: 1.5rem 0 0; padding: 0; }
+  .courses li { break-inside: avoid; padding: .5rem 0; }
+  .courses strong { font: 700 1rem var(--sans); }
+  .courses span { color: var(--slate); }
+
+  /* Contato */
+  .contact { background: var(--ink); color: var(--paper); padding: clamp(4rem, 9vw, 7rem) 0; }
+  .contact h2 { max-width: 18ch; font-size: clamp(2rem, 5vw, 3.6rem); }
+  .contact p { max-width: 34rem; margin: 0 0 2rem; }
+  .contact :focus-visible { outline-color: var(--tag); }
+  .contact a:hover { color: var(--ink); }
+  .contact-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .btn {
+    display: inline-flex; align-items: center; height: 3rem; padding: 0 2rem 0 1.25rem; background: var(--tag); color: var(--ink);
+    text-decoration: none; font: 700 1rem var(--sans);
+    clip-path: polygon(0 0, calc(100% - .9rem) 0, 100% 50%, calc(100% - .9rem) 100%, 0 100%);
+  }
+  .btn:hover { background: #fff; }
+  .contact .side { margin: 2rem 0 0; font-size: .95rem; color: var(--soft); }
+  .site-foot { padding: 1.5rem 0 2.5rem; font: 500 .875rem var(--sans); color: var(--slate); }
 </style>
 </head>
 <body>
+<a class="skip" href="#casos">Ir para os casos</a>
 
-<header>
-  <nav>
-    <div class="brand">Caio Mancuso<span>Inteligência Comercial</span></div>
-    <div class="navlinks">
-      <a href="#sobre">Sobre</a>
+<div class="wrap">
+  <header class="site-head">
+    <a class="wordmark" href="#topo">Caio Mancuso</a>
+    <nav class="site-nav" aria-label="Principal">
+      <a href="#casos">Casos</a>
+      <a href="#metodo">Método</a>
       <a href="#trajetoria">Trajetória</a>
-      <a href="#especialidades">Especialidades</a>
-      <a href="#projetos">Projetos</a>
-      <a href="#certificacoes">Formação</a>
-    </div>
-    <a href="#contato" class="cta-btn">Contato</a>
-  </nav>
-</header>
+      <a href="#contato">Contato</a>
+    </nav>
+  </header>
 
-<section class="hero">
-  <div class="wrap">
-    <div class="eyebrow">Inteligência Comercial &amp; Dados</div>
-    <h1>Dados comerciais têm um caminho até virarem decisão. Eu monitoro esse caminho.</h1>
-    <p class="lede">Conecto sell-in, sell-out e dados de mercado em análises e dashboards que sustentam decisões reais de canal, precificação e demanda.</p>
-    <div class="hero-actions">
-      <a href="#projetos" class="btn-primary">Ver projetos</a>
-      <a href="#contato" class="btn-secondary">Falar comigo</a>
-    </div>
-    <p class="mono" style="font-size:12.5px; color:var(--muted-2); margin-top:-14px; margin-bottom:34px;">5+ anos · 5 empresas · <a href="#trajetoria" style="color:var(--accent-2); text-decoration:underline;">ver trajetória completa ↓</a></p>
-  </div>
-</section>
-
-<div class="wrap reveal" style="margin-bottom:64px;">
-  <div class="panel">
-    <div class="panel-head">
-      <div class="panel-title">// canais monitorados</div>
-      <div class="panel-live"><span class="livedot"></span>ativo</div>
-    </div>
-    <div class="channels">
-      <div class="channel"><div class="cname">Alimentar</div><div class="cdesc">sell-in · sell-out · cobertura</div></div>
-      <div class="channel"><div class="cname">Perfumaria</div><div class="cdesc">sell-in · sell-out · cobertura</div></div>
-      <div class="channel"><div class="cname">Farma</div><div class="cdesc">sell-in · sell-out · cobertura</div></div>
-    </div>
-    <div class="panel-foot">
-      <span class="step">coleta</span><span class="step">estruturação</span><span class="step">análise</span><span class="step">decisão</span>
-    </div>
-  </div>
+  <main id="topo">
+    <section class="hero" aria-labelledby="titulo">
+      <h1 id="titulo">Quatro etapas separam o dado comercial da decisão. Eu atuo em todas.</h1>
+      <p class="lede">Sou analista de inteligência comercial na Yamá Cosméticos. Conecto sell-in, sell-out, preço e cobertura nos canais Alimentar, Perfumaria e Farma, e construo as ferramentas quando o dado ainda não existe.</p>
+    </section>
+  </main>
 </div>
 
-<section id="sobre">
+<section class="block" id="casos" aria-labelledby="t-casos">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Sobre</div>
-      <h2>Da coleta à decisão comercial</h2>
+    <h2 id="t-casos">Sem número que eu não sustento</h2>
+    <p class="intro">Escolhi os seis casos que melhor mostram como eu trabalho. As ilustrações usam dados fictícios: nenhum valor, cliente, representante ou tela real da empresa aparece aqui.</p>
+
+    <div class="filter" role="group" aria-label="Filtrar casos por etapa do dado">
+      <span>Etapa do dado</span>
+      <button class="tag chip" type="button" data-stage="1" aria-pressed="false"><b>1</b> Coleta</button>
+      <button class="tag chip" type="button" data-stage="2" aria-pressed="false"><b>2</b> Estruturação</button>
+      <button class="tag chip" type="button" data-stage="3" aria-pressed="false"><b>3</b> Análise</button>
+      <button class="tag chip" type="button" data-stage="4" aria-pressed="false"><b>4</b> Decisão</button>
     </div>
-    <div class="about-grid reveal">
-      <div class="about-text">
-        <p>Atuo com <strong>inteligência comercial</strong>, construindo análises e dashboards que consolidam sell-in, sell-out, distribuição e rentabilidade em indicadores acionáveis para times comerciais, regionais e de supply chain.</p>
-        <p>Meu trabalho parte da estruturação de dados — organizar, padronizar e garantir a confiabilidade das bases — antes de chegar à análise. É essa disciplina de base que sustenta o restante: projeções de demanda, simulações de precificação e monitoramento de mercado.</p>
-        <p>Também desenvolvo ferramentas internas quando o dado não existe pronto: scrapers para monitorar concorrência, algoritmos de correspondência de catálogo, sistemas de avaliação de performance. Prefiro construir o que falta a esperar por ele.</p>
+
+    <div class="viewer">
+      <div class="tabs" role="tablist" aria-label="Casos" aria-orientation="vertical">
+        <button class="tab" role="tab" id="tab-bi" aria-controls="p-bi" data-stages="2 3"><span class="t"><span class="hl">Power BI comercial: Curva ABC e regras de negócio</span></span><span class="m">Em evolução, estruturação e análise</span></button>
+        <button class="tab" role="tab" id="tab-pharm" aria-controls="p-pharm" data-stages="2 3 4"><span class="t"><span class="hl">Painel integrado para a força de campo do canal Farma</span></span><span class="m">Concluído, estruturação, análise e decisão</span></button>
+        <button class="tab" role="tab" id="tab-camp" aria-controls="p-camp" data-stages="2 4"><span class="t"><span class="hl">Motor de apuração de campanha de incentivo</span></span><span class="m">Em produção, estruturação e decisão</span></button>
+        <button class="tab" role="tab" id="tab-sop" aria-controls="p-sop" data-stages="3 4"><span class="t"><span class="hl">Previsão de vendas 2027 para o S&amp;OP</span></span><span class="m">Em andamento, análise e decisão</span></button>
+        <button class="tab" role="tab" id="tab-mon" aria-controls="p-mon" data-stages="1 2"><span class="t"><span class="hl">Monitor de preços da concorrência</span></span><span class="m">Em produção, coleta e estruturação</span></button>
+        <button class="tab" role="tab" id="tab-web" aria-controls="p-web" data-stages="1 4"><span class="t"><span class="hl">Aplicações web sobre Supabase</span></span><span class="m">Em produção, coleta e decisão</span></button>
       </div>
-      <div class="stackbox">
-        <h3>Stack principal</h3>
-        <div class="chip-row">
-          <span class="chip">Power BI / DAX</span>
-          <span class="chip">Python</span>
-          <span class="chip">SQL</span>
-          <span class="chip">Excel Avançado</span>
-          <span class="chip">Selenium</span>
-          <span class="chip">Supabase</span>
-          <span class="chip">Claude API</span>
-        </div>
+
+      <div class="panels">
+        <article class="panel" role="tabpanel" id="p-bi" aria-labelledby="tab-bi" tabindex="0">
+          <h3>Power BI comercial: Curva ABC e regras de negócio</h3>
+          <figure class="figure">
+            <svg viewBox="0 0 640 270" data-viz="abc" role="img" aria-label="Gráfico de Pareto com barras de produtos classificados em A, B e C e linha de percentual acumulado"></svg>
+            <figcaption>Ilustração com dados fictícios: curva ABC com classes A, B e C pelo percentual acumulado.</figcaption>
+          </figure>
+          <p><strong>O problema.</strong> As definições de indicadores como Meta x Realizado, positivação e churn tinham contradições, e os painéis de produto precisavam responder por marca sem trocar de tela.</p>
+          <p><strong>A decisão.</strong> Modelei em estrela, com tabelas fato e dimensão padronizadas (prefixos f e d), e criei um registro formal de regras de negócio, resolvendo as contradições antes de escrever a medida. A página de Curva ABC tem botões por marca, cartões de KPI, um tooltip com a evolução mensal e cores dinâmicas calculadas em DAX.</p>
+          <p><strong>O que ficou de pé.</strong> Um modelo com uma regra única por indicador e uma página que troca de marca em um clique. Junto, ficaram anotações dos padrões de DAX que mais custaram tempo, como o contexto de filtro dentro de tooltips.</p>
+          <p class="stack">Power BI, DAX, modelagem em estrela</p>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-pharm" aria-labelledby="tab-pharm" tabindex="0" hidden>
+          <h3>Painel integrado para a força de campo do canal Farma</h3>
+          <figure class="figure">
+            <svg viewBox="0 0 640 290" data-viz="pdv" role="img" aria-label="Dispersão de pontos de venda por potencial de sell-out e frequência de visita, separados em três níveis de prioridade"></svg>
+            <figcaption>Ilustração com dados fictícios: segmentação de pontos de venda para priorizar rotas.</figcaption>
+          </figure>
+          <p><strong>O problema.</strong> A equipe de campo do canal Farma, em redes e PDVs independentes, precisava de dados de várias fontes reunidos e confiáveis para acompanhar execução e metas.</p>
+          <p><strong>A decisão.</strong> Como coordenador de backoffice e inteligência de mercado, liderei a célula nacional e a governança dos dados. Montei pipelines em Excel VBA, Python e Power Query que alimentam KPIs de produtividade, sell-out, visitas e reembolsos, além de modelos de segmentação de PDVs para priorizar rotas.</p>
+          <p><strong>O que ficou de pé.</strong> O painel foi apresentado em uma convenção nacional, em abril de 2025, para apoiar decisões da liderança.</p>
+          <p class="stack">Power BI, DAX, Python, Excel VBA, Power Query</p>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-camp" aria-labelledby="tab-camp" tabindex="0" hidden>
+          <h3>Motor de apuração de campanha de incentivo</h3>
+          <figure class="figure">
+            <svg viewBox="0 0 640 260" data-viz="flow" role="img" aria-label="Fluxo de cinco etapas da apuração e uma conferência entre valor apurado e valor auditado, com uma diferença sinalizada"></svg>
+            <figcaption>Ilustração com dados fictícios: etapas da apuração e conferência entre apurado e auditado.</figcaption>
+          </figure>
+          <p><strong>O problema.</strong> Uma campanha de incentivo semestral para a força de vendas precisava ser apurada todo mês, com regras diferentes por critério e sem margem para erro de pagamento.</p>
+          <p><strong>A decisão.</strong> Construí a apuração em uma planilha com macros e dei a cada fórmula um registro de auditoria: nada é considerado fechado sem conferência dupla, feita por IA e pela área de Inteligência Comercial. Cada arquivo tem resumo executivo e documentação técnica, para que outra pessoa consiga refazer o caminho.</p>
+          <p><strong>O que ficou de pé.</strong> Os fechamentos mensais foram apurados, auditados e distribuídos. No processo, mapeei riscos de regra e de dados, como dupla contagem entre critérios, cadastros incompletos e sensibilidade a arredondamento, e deixei tudo documentado.</p>
+          <p class="stack">Excel com macros (.xlsm), fórmulas auditáveis, documentação técnica</p>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-sop" aria-labelledby="tab-sop" tabindex="0" hidden>
+          <h3>Previsão de vendas 2027 para o S&amp;OP</h3>
+          <figure class="figure">
+            <svg viewBox="0 0 640 270" data-viz="fc" role="img" aria-label="Série histórica de vendas com janela de backtesting e três projeções de modelos diferentes para o ano seguinte"></svg>
+            <figcaption>Ilustração com dados fictícios: histórico, janela de backtesting e três modelos projetando o ano seguinte.</figcaption>
+          </figure>
+          <p><strong>O problema.</strong> O plano de vendas de 2027 precisava de uma projeção defensável, e uma previsão única dificulta discutir o quanto confiar nela.</p>
+          <p><strong>A decisão.</strong> Coloquei vários modelos estatísticos lado a lado, como regressão linear, CAGR sazonalizado, média móvel ponderada e suavização exponencial (ETS), e os testei contra o passado recente (backtesting) antes de olhar para 2027. Um consenso simples entra como referência.</p>
+          <p><strong>O que ficou de pé.</strong> A planilha apoia o ciclo de S&amp;OP e deixa visível onde os modelos convergem e onde divergem. Segue em revisão.</p>
+          <p class="stack">Excel, modelos estatísticos de forecast, backtesting</p>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-mon" aria-labelledby="tab-mon" tabindex="0" hidden>
+          <h3>Monitor de preços da concorrência</h3>
+          <figure class="figure">
+            <svg viewBox="0 0 640 290" data-viz="price" role="img" aria-label="Preços de seis canais, três de varejo online e três portais B2B, comparados a um preço de referência igual a cem"></svg>
+            <figcaption>Ilustração com dados fictícios: índice de preço por canal, com referência igual a 100.</figcaption>
+          </figure>
+          <p><strong>O problema.</strong> Acompanhar preços em lojas online e portais B2B dependia de coleta manual, lenta e diferente a cada canal.</p>
+          <p><strong>A decisão.</strong> Um scraper por fonte, seis no total, sendo três de varejo online e três portais B2B com login, e um orquestrador que roda todos em sequência e interrompe se algum falhar, em vez de consolidar um dado parcial.</p>
+          <p><strong>O que ficou de pé.</strong> Um Excel datado, com uma aba por canal, um resumo e uma legenda, que compara os preços entre canais no mesmo relatório.</p>
+          <p class="stack">Python, Selenium, pandas</p>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-web" aria-labelledby="tab-web" tabindex="0" hidden>
+          <h3>Aplicações web sobre Supabase</h3>
+          <figure class="figure">
+            <svg viewBox="0 0 640 230" data-viz="arch" role="img" aria-label="Diagrama: formulário público e painel administrativo acessam as tabelas apenas por funções controladas, e o acesso direto é bloqueado"></svg>
+            <figcaption>Ilustração conceitual: escrita e leitura só passam por funções controladas.</figcaption>
+          </figure>
+          <p><strong>O problema.</strong> Dois processos precisavam de um lugar único e padronizado: o cadastro de parceiros externos e a avaliação trimestral de representantes comerciais autônomos.</p>
+          <p><strong>A decisão.</strong> No cadastro, o formulário público só escreve no banco por funções controladas (SECURITY DEFINER), sem acesso direto às tabelas. O CNPJ é validado, os contatos são obrigatórios já no banco e o painel administrativo usa senha com hash. No scorecard, os critérios têm peso, a nota final é calculada automaticamente e cada avaliação sai em PDF.</p>
+          <p><strong>O que ficou de pé.</strong> Duas aplicações publicadas, com README e guia de uso, e anotações sobre as armadilhas de segurança do Supabase que descobri no caminho.</p>
+          <p class="stack">Supabase (Postgres), JavaScript, GitHub Pages</p>
+        </article>
       </div>
     </div>
   </div>
 </section>
 
-<section id="trajetoria">
+<section class="block" id="metodo" aria-labelledby="t-metodo">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Trajetória</div>
-      <h2>5+ anos, 5 empresas</h2>
-      <p>Sem embelezar: passagens curtas em quatro das cinco posições. Prefiro deixar visível a mudar a história.</p>
-    </div>
-    <div class="reveal" style="border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--surface);">
-      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:18px 22px; border-bottom:1px solid var(--line);">
-        <div><strong>Yamá Cosméticos</strong> — Analista de Inteligência Comercial</div>
-        <div class="mono" style="font-size:12.5px; color:var(--muted-2);">set/2025 — atual</div>
+    <h2 id="t-metodo">O que sustenta os casos</h2>
+    <div class="two">
+      <div>
+        <h3>A ferramenta precisa sobreviver a mim</h3>
+        <p>Antes de qualquer ferramenta nova entrar em desenvolvimento, preencho uma ficha de continuidade: impacto se ela parar, dependência de IA, onde está o código, quem é o custódio, se existe runbook e o que fica na empresa caso eu saia. Sem isso, não escrevo a primeira linha.</p>
       </div>
-      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:18px 22px; border-bottom:1px solid var(--line);">
-        <div><strong>Pharmexx</strong> — Coordenador de Backoffice e Inteligência de Mercado (Projeto P&amp;G)</div>
-        <div class="mono" style="font-size:12.5px; color:var(--muted-2);">dez/2024 — jul/2025</div>
-      </div>
-      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:18px 22px; border-bottom:1px solid var(--line);">
-        <div><strong>Super Troco</strong> — Analista de Inteligência Comercial e Mercado</div>
-        <div class="mono" style="font-size:12.5px; color:var(--muted-2);">set/2023 — jul/2024</div>
-      </div>
-      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:18px 22px; border-bottom:1px solid var(--line);">
-        <div><strong>Grupo DBN</strong> — Analista de Inteligência de Mercado e E-commerce</div>
-        <div class="mono" style="font-size:12.5px; color:var(--muted-2);">abr/2022 — set/2023</div>
-      </div>
-      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:18px 22px;">
-        <div><strong>DHL Express</strong> — Analista de Dados</div>
-        <div class="mono" style="font-size:12.5px; color:var(--muted-2);">abr/2021 — dez/2021</div>
+      <div>
+        <h3>Em construção e em paralelo</h3>
+        <p>A MIA é um agente com a API da Anthropic para perguntas comerciais recorrentes, como posição de canal e leitura da concorrência. É um projeto pessoal, e a decisão entre processar dados sensíveis localmente ou via API segue em aberto. Também mantenho um segundo cérebro em Obsidian, com skills de IA próprias que padronizam planilhas, notas e fechamentos diários.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="especialidades">
+<section class="block" id="trajetoria" aria-labelledby="t-traj">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Especialidades</div>
-      <h2>Sete frentes, uma disciplina em comum</h2>
-      <p>Cada uma parte do mesmo princípio: um dado só vale quando chega estruturado a quem decide.</p>
+    <h2 id="t-traj">Cinco posições desde 2021, todas em análise de dados</h2>
+    <p class="intro">O escopo cresceu ao longo do caminho: de analista a coordenador de uma célula nacional, e das análises à construção das próprias ferramentas. A escala abaixo é proporcional ao tempo em cada posição.</p>
+
+    <div class="gantt">
+      <div class="g-axis" aria-hidden="true">
+        <div></div>
+        <div class="g-scale">
+          <span style="left:0%">2021</span><span style="left:17.39%">2022</span><span style="left:34.78%">2023</span>
+          <span style="left:52.17%">2024</span><span style="left:69.57%">2025</span><span style="left:86.96%">2026</span>
+        </div>
+      </div>
+
+      <div class="g-row">
+        <div class="g-text"><strong>Analista de Inteligência Comercial</strong><span class="org">Yamá Cosméticos</span><span class="when">set/2025 até hoje</span><span class="what">Business intelligence, monitoramento de preços, apuração de campanhas de incentivo e governança de dados do ERP.</span></div>
+        <div class="g-track" aria-hidden="true"><span class="g-bar now" style="left:81.16%;width:18.7%"></span></div>
+      </div>
+      <div class="g-row">
+        <div class="g-text"><strong>Coordenador de Backoffice e Inteligência de Mercado</strong><span class="org">Pharmexx</span><span class="when">dez/2024 a jul/2025</span><span class="what">Célula nacional de backoffice e governança de dados no canal Farma.</span></div>
+        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:68.12%;width:11.59%"></span></div>
+      </div>
+      <div class="g-row">
+        <div class="g-text"><strong>Analista de Inteligência Comercial e Mercado</strong><span class="org">Super Troco</span><span class="when">set/2023 a jul/2024</span></div>
+        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:47.1%;width:15.22%"></span></div>
+      </div>
+      <div class="g-row">
+        <div class="g-text"><strong>Analista de Inteligência de Mercado e E-commerce</strong><span class="org">Grupo DBN</span><span class="when">abr/2022 a set/2023</span></div>
+        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:21.74%;width:25.36%"></span></div>
+      </div>
+      <div class="g-row">
+        <div class="g-text"><strong>Analista de Dados</strong><span class="org">DHL Express</span><span class="when">abr/2021 a dez/2021</span></div>
+        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:4.35%;width:13.04%"></span></div>
+      </div>
     </div>
-    <div class="spec-grid reveal">
-      <div class="spec-cell"><div class="spec-num">01</div><h3>Inteligência Comercial</h3><p>Indicadores que conectam sell-in, sell-out e performance de mercado por canal.</p></div>
-      <div class="spec-cell"><div class="spec-num">02</div><h3>Dashboards Estratégicos</h3><p>Painéis em Power BI com foco em KPIs de performance comercial.</p></div>
-      <div class="spec-cell"><div class="spec-num">03</div><h3>Estruturação de Dados</h3><p>Organização e padronização de bases, garantindo confiabilidade e escalabilidade das análises.</p></div>
-      <div class="spec-cell"><div class="spec-num">04</div><h3>Análises Comerciais Avançadas</h3><p>Estudos de carteira de clientes, performance de produto e oportunidades de crescimento.</p></div>
-      <div class="spec-cell"><div class="spec-num">05</div><h3>Precificação &amp; Estratégia</h3><p>Simulações de impacto comercial e estudos de posicionamento de preço.</p></div>
-      <div class="spec-cell"><div class="spec-num">06</div><h3>Planejamento &amp; S&amp;OP</h3><p>Projeções de vendas e apoio ao planejamento de demanda, conectando comercial e operação.</p></div>
-      <div class="spec-cell"><div class="spec-num">07</div><h3>Aplicações &amp; Soluções</h3><p>Scrapers, orquestradores e sistemas próprios quando o dado precisa ser construído do zero.</p></div>
-    </div>
+
+    <h3 style="margin:3.5rem 0 0;font:700 1.25rem/1.2 var(--sans)">Formação em dados</h3>
+    <ul class="courses">
+      <li><strong>Ciência da Computação com Python</strong><br><span>USP, via Coursera, 2024</span></li>
+      <li><strong>Python para Análise de Dados</strong><br><span>Data Science Academy, 2024</span></li>
+      <li><strong>Power BI para Business Intelligence</strong><br><span>Data Science Academy, 2023</span></li>
+      <li><strong>Python Fundamentos</strong><br><span>Senac SP, 2023</span></li>
+    </ul>
   </div>
 </section>
 
-<section id="projetos">
+<section class="contact" id="contato" aria-labelledby="t-contato">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Projetos</div>
-      <h2>O que foi de fato construído</h2>
-      <p>Problema, decisão técnica e o que ficou em pé — com print real onde eu tenho, sem mockup onde não tenho.</p>
+    <h2 id="t-contato">Vamos conversar sobre dados comerciais?</h2>
+    <p>Inteligência comercial, BI, precificação, previsão de vendas e automação de análises. Escolha o canal que preferir.</p>
+    <div class="contact-links">
+      <!-- PREENCHER: troque os dois valores abaixo. Links com "PREENCHER" ficam ocultos automaticamente. -->
+      <a class="btn" data-pending href="mailto:PREENCHER-SEU-EMAIL">E-mail</a>
+      <a class="btn" data-pending href="https://www.linkedin.com/in/PREENCHER-SEU-PERFIL/" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/caiomancuso" rel="noopener">GitHub</a>
     </div>
-
-    <div class="reveal">
-      <div class="case">
-        <div class="case-top"><h3>Ecossistema de monitoramento de preços</h3><span class="case-status status-live">Em produção</span></div>
-        <div class="case-cols">
-          <div class="case-col"><div class="k">Problema</div><p>Acompanhar preço de concorrência em múltiplos marketplaces e distribuidores dependia de coleta manual, lenta e inconsistente entre canais.</p></div>
-          <div class="case-col"><div class="k">O que construí</div><ul><li>6 scrapers Python/Selenium</li><li>1 orquestrador sequencial</li><li>Consolidação automática por canal em workbook único</li></ul></div>
-          <div class="case-col"><div class="k">Resultado</div><p>Substituiu coleta manual dispersa por rotina centralizada, comparável entre canais no mesmo relatório.</p></div>
-        </div>
-        <div class="case-tech">Python · Selenium · webdriver-manager · pandas</div>
-      </div>
-
-      <div class="case">
-        <div class="case-top"><h3>Correspondência de catálogo (SKU matching)</h3><span class="case-status status-live">Em produção</span></div>
-        <div class="case-cols">
-          <div class="case-col"><div class="k">Problema</div><p>Catálogo interno e listagem de um seller no Mercado Livre sem identificador comum — conferência item a item inviável em escala.</p></div>
-          <div class="case-col"><div class="k">O que construí</div><ul><li>Similaridade textual (Python difflib)</li><li>Classificação em 3 níveis de confiança</li></ul></div>
-          <div class="case-col"><div class="k">Resultado</div><p>Prioriza revisão manual pelos casos de baixa confiança, reduzindo volume de conferência humana direta.</p></div>
-        </div>
-        <div class="case-tech">Python · difflib</div>
-      </div>
-
-      <div class="case">
-        <div class="case-top"><h3>Painel Integrado de Inteligência — Pharmexx | Projeto P&amp;G</h3><span class="case-status status-live">Concluído · dez/2024–jul/2025</span></div>
-        <div class="case-body has-img">
-          <div class="case-cols" style="grid-template-columns:1fr;">
-            <div class="case-col"><div class="k">Contexto</div><p>Como Coordenador de Backoffice e Inteligência de Mercado no projeto P&amp;G, liderei a célula nacional de backoffice e a governança de dados que suportava a equipe de campo no canal Farma (redes e PDVs independentes).</p></div>
-            <div class="case-col"><div class="k">O que construí</div><ul><li>Pipelines de dados (Excel VBA, Python Pandas/NumPy, Power Query) integrando múltiplas fontes</li><li>Automação de KPIs de execução: produtividade, sell-out, visitas, reembolsos</li><li>Dashboards em Power BI com foco em insights preditivos e acompanhamento de metas</li><li>Modelos de segmentação de PDVs para otimização de rotas e priorização comercial</li></ul></div>
-            <div class="case-col"><div class="k">Resultado</div><p>Painel Integrado apresentado na Convenção Nacional Pharmexx | P&amp;G (abr/2025), consolidando dados estratégicos para apoiar decisões da liderança.</p></div>
-          </div>
-          <div class="case-img">
-            <div class="carousel" id="pharmexx-carousel">
-              <div class="carousel-track">
-                <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663148547639/aMB4iSCxtQepZ4ZR9bjKbb/pharmexx-aba-resumo_f90a54b9.png" alt="Pharmexx - aba de resumo executivo">
-                <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663148547639/aMB4iSCxtQepZ4ZR9bjKbb/AnalisecomercialAvan%C3%A7ada_a6aabe1f.png" alt="Pharmexx - módulo de análise comercial avançada">
-              </div>
-              <button class="carousel-nav prev" aria-label="Anterior">‹</button>
-              <button class="carousel-nav next" aria-label="Próxima">›</button>
-              <div class="carousel-dots"></div>
-            </div>
-          </div>
-        </div>
-        <div class="case-tech">Power BI · DAX · Python · Excel VBA · Power Query</div>
-      </div>
-
-      <div class="case">
-        <div class="case-top"><h3>Scorecard de performance — RCAs</h3><span class="case-status status-live">Em produção</span></div>
-        <div class="case-body has-img">
-          <div class="case-cols" style="grid-template-columns:1fr;">
-            <div class="case-col"><div class="k">Problema</div><p>Avaliação trimestral de Representantes Comerciais Autônomos sem critério padronizado nem cálculo automático de score.</p></div>
-            <div class="case-col"><div class="k">O que construí</div><ul><li>10 critérios ponderados (70% quantitativo, 30% qualitativo)</li><li>Cálculo automático de score final</li><li>Painel admin com CRUD e exportação CSV</li><li>Supabase com Row Level Security</li></ul></div>
-          </div>
-          <div class="case-img">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663148547639/aMB4iSCxtQepZ4ZR9bjKbb/scorecard_page-000_e6869a80.png" alt="Print real do Scorecard RCA">
-          </div>
-        </div>
-        <div class="case-tech">React · Supabase · RLS</div>
-      </div>
-
-      <div class="case">
-        <div class="case-top"><h3>MIA — módulo de inteligência de análise</h3><span class="case-status status-progress">Em desenvolvimento</span></div>
-        <div class="case-cols">
-          <div class="case-col"><div class="k">Problema</div><p>Perguntas comerciais recorrentes (posição de canal, gap de cobertura, leitura de concorrência) exigem análise manual toda vez que surgem.</p></div>
-          <div class="case-col"><div class="k">O que estou construindo</div><ul><li>Agente com API Anthropic</li><li>Orquestradores Python para fontes internas</li><li>Roadmap de 8 fases, com avaliação de risco de exposição de dados a APIs externas</li></ul></div>
-          <div class="case-col"><div class="k">Status</div><p>Arquitetura definida; decisão em aberto entre processamento local ou via API para dados sensíveis.</p></div>
-        </div>
-        <div class="case-tech">React · Vite · Anthropic API · Python</div>
-      </div>
-    </div>
+    <p class="side" data-pending-wrap>Também ensino Excel do zero à análise de dados. <a data-pending href="PREENCHER-LINK-DO-CURSO" rel="noopener">Ver o curso na Hotmart</a>.</p>
   </div>
 </section>
 
-<section id="iniciativas">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Fora do core</div>
-      <h2>Iniciativas pessoais</h2>
-    </div>
-    <div class="side-note reveal">Estes projetos não são inteligência comercial — são onde aplico as mesmas ferramentas fora do contexto de trabalho.</div>
-    <div class="init-grid reveal">
-      <div class="init-card">
-        <div class="carousel" id="lara-carousel">
-          <div class="carousel-track">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663148547639/aMB4iSCxtQepZ4ZR9bjKbb/lara-tela-principal_53df235e.png" alt="LARA - tela principal">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663148547639/aMB4iSCxtQepZ4ZR9bjKbb/lara-premia%C3%A7%C3%B5es-admin_12267fd4.png" alt="LARA - painel de premiações admin">
-          </div>
-          <button class="carousel-nav prev" aria-label="Anterior">‹</button>
-          <button class="carousel-nav next" aria-label="Próxima">›</button>
-          <div class="carousel-dots"></div>
-        </div>
-        <div class="init-body">
-          <span class="init-tag">Uso pessoal</span>
-          <h3>LARA</h3>
-          <p>Agente conversacional de leitura infantil: histórias, perguntas, palavras novas e jogos, com dificuldade adaptativa e síntese de voz em português. Construído com Claude (Anthropic), Base44 e Web Speech API.</p>
-        </div>
-      </div>
-      <div class="init-card">
-        <div class="init-body">
-          <span class="init-tag">Curso · Hotmart</span>
-          <h3>Excel Profissional</h3>
-          <p>Curso estruturado do zero à análise de dados: fórmulas, tabelas dinâmicas, automação e dashboards, com casos de uso corporativo real.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="diferenciais">
-  <div class="wrap">
-    <div class="section-head reveal"><div class="section-tag">Diferenciais</div><h2>Como eu trabalho</h2></div>
-    <div class="diff-list reveal">
-      <div class="diff-item"><span class="idx">→</span><div><h3>Visão estratégica + execução técnica</h3><p>Não entrego só análise — entrego a ferramenta que sustenta a análise, quando ela não existe.</p></div></div>
-      <div class="diff-item"><span class="idx">→</span><div><h3>Do dado à decisão</h3><p>Estruturação, análise, visualização e recomendação num único fluxo, não etapas soltas.</p></div></div>
-      <div class="diff-item"><span class="idx">→</span><div><h3>Construo o que falta</h3><p>Quando o dado não existe pronto, construo o scraper, o matching ou o orquestrador necessário.</p></div></div>
-      <div class="diff-item"><span class="idx">→</span><div><h3>Sem número que eu não sustento</h3><p>Prefiro descrever o que foi construído e por quê a inflar resultado que não consigo provar.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<section id="certificacoes">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="section-tag">Formação</div>
-      <h2>Formação em dados</h2>
-      <p>Curadoria: mantive aqui apenas o que é diretamente relevante para dados e BI.</p>
-    </div>
-    <div class="cert-grid reveal">
-      <div class="cert-row"><div><div class="cert-name">Ciência da Computação com Python</div><div class="cert-inst">USP (Coursera)</div></div><div class="cert-year">2024</div></div>
-      <div class="cert-row"><div><div class="cert-name">Python para Análise de Dados</div><div class="cert-inst">Data Science Academy</div></div><div class="cert-year">2024</div></div>
-      <div class="cert-row"><div><div class="cert-name">Power BI para BI</div><div class="cert-inst">Data Science Academy</div></div><div class="cert-year">2023</div></div>
-      <div class="cert-row"><div><div class="cert-name">Python Fundamentos</div><div class="cert-inst">Senac/SP</div></div><div class="cert-year">2023</div></div>
-    </div>
-    <p class="cert-footnote reveal">Também possuo formações complementares em marketing e analytics (Google Analytics, SEBRAE, FGV, Rock University) — disponíveis no LinkedIn, fora do foco deste portfólio.</p>
-  </div>
-</section>
-
-<section id="contato" style="border-bottom:none;">
-  <div class="wrap">
-    <div class="section-head reveal"><div class="section-tag">Contato</div><h2>Vamos conversar?</h2></div>
-    <div class="contact-note reveal">Prévia visual (artifact) — este formulário ainda não envia dados reais; falta conectar a um backend ou serviço tipo Formspree/EmailJS antes de publicar.</div>
-    <form class="form-grid reveal" onsubmit="event.preventDefault(); alert('Prévia visual — formulário ainda não está conectado a um envio real.');">
-      <div class="form-grid two"><input type="text" placeholder="Nome *" required><input type="email" placeholder="Email *" required></div>
-      <input type="text" placeholder="Assunto *" required>
-      <textarea placeholder="Mensagem *" required></textarea>
-      <button type="submit" class="submit-btn">Enviar mensagem</button>
-    </form>
-  </div>
-</section>
-
-<footer><div class="wrap">© 2026 Caio Mancuso — Inteligência Comercial &amp; Dados</div></footer>
+<footer class="site-foot">
+  <div class="wrap">© 2026 Caio Mancuso</div>
+</footer>
 
 <script>
-  const els = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }); }, {threshold:0.1});
-  els.forEach(el=>io.observe(el));
-
-  document.querySelectorAll('.carousel').forEach(car=>{
-    const track = car.querySelector('.carousel-track');
-    const imgs = track.querySelectorAll('img');
-    const dotsWrap = car.querySelector('.carousel-dots');
-    let idx = 0;
-    imgs.forEach((_,i)=>{
-      const d = document.createElement('button');
-      d.className = 'cdot' + (i===0?' active':'');
-      d.setAttribute('aria-label', 'Imagem ' + (i+1));
-      d.onclick = (function(index){ return function(){ go(index); }; })(i);
-      dotsWrap.appendChild(d);
-    });
-    function go(i){
-      idx = (i + imgs.length) % imgs.length;
-      track.style.transform = 'translateX(-' + (idx*100) + '%)';
-      dotsWrap.querySelectorAll('.cdot').forEach((d,j)=>d.classList.toggle('active', j===idx));
+(function () {
+  // Links ainda não preenchidos ficam ocultos, em vez de publicar um link quebrado.
+  document.querySelectorAll('[data-pending]').forEach(function (a) {
+    if (/PREENCHER/.test(a.getAttribute('href'))) {
+      a.hidden = true;
+      var w = a.closest('[data-pending-wrap]');
+      if (w) w.hidden = true;
+      console.warn('Link pendente de preenchimento:', a.textContent.trim());
     }
-    car.querySelector('.prev').onclick = function(){ go(idx-1); };
-    car.querySelector('.next').onclick = function(){ go(idx+1); };
   });
-</script>
 
+  /* ---------- Ilustrações com dados fictícios ---------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(name, attrs, parent) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function txt(parent, x, y, s, cls, anchor) {
+    var t = el('text', { x: x, y: y, 'class': cls || 'sv-t', 'text-anchor': anchor || 'start' }, parent);
+    t.textContent = s;
+    return t;
+  }
+  function rng(seed) {
+    return function () {
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function arrow(p, x, y, w, h, lines, tone) {
+    var pts = [[x, y], [x + w - 14, y], [x + w, y + h / 2], [x + w - 14, y + h], [x, y + h]].map(function (q) { return q.join(','); }).join(' ');
+    el('polygon', { points: pts, 'class': tone === 'tag' ? 'sv-ftag' : 'sv-fink' }, p);
+    var cx = x + (w - 14) / 2, cls = tone === 'tag' ? 'sv-ti' : 'sv-tw';
+    var y0 = y + h / 2 + (lines.length > 1 ? -2 : 4);
+    lines.forEach(function (l, i) { txt(p, cx, y0 + i * 14, l, cls, 'middle'); });
+  }
+  function poly(p, cls, pts) {
+    return el('polyline', { points: pts.map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' '), 'class': cls }, p);
+  }
+
+  var R = {};
+
+  R.abc = function (s) {
+    var vals = [22, 17, 13, 10, 8, 6, 5, 4, 3, 2.5, 2, 1.5];
+    var sum = vals.reduce(function (a, b) { return a + b; }, 0), max = 22;
+    var x0 = 54, bw = 34, gap = 12, base = 220, H = 180, cum = 0, pts = [], groups = {};
+    el('line', { x1: 40, x2: 606, y1: base, y2: base, 'class': 'sv-ax' }, s);
+    [0.8, 0.95].forEach(function (lv) {
+      var yy = base - lv * H;
+      el('line', { x1: 40, x2: 606, y1: yy, y2: yy, 'class': 'sv-dash' }, s);
+      txt(s, 612, yy + 4, Math.round(lv * 100) + '%');
+    });
+    vals.forEach(function (v, i) {
+      var prev = cum / sum; cum += v;
+      var cls = prev < 0.8 ? 'a' : (prev < 0.95 ? 'b' : 'c');
+      var h = v / max * H, x = x0 + i * (bw + gap);
+      el('rect', { x: x, y: base - h, width: bw, height: h, 'class': cls === 'a' ? 'sv-fink' : (cls === 'b' ? 'sv-fslate' : 'sv-fsoft') }, s);
+      pts.push([x + bw / 2, base - cum / sum * H]);
+      if (!groups[cls]) groups[cls] = [x, x + bw]; else groups[cls][1] = x + bw;
+    });
+    poly(s, 'sv-back', pts); poly(s, 'sv-front', pts);
+    pts.forEach(function (q) { el('circle', { cx: q[0], cy: q[1], r: 3.5, 'class': 'sv-ftag sv-stroke' }, s); });
+    ['a', 'b', 'c'].forEach(function (c) {
+      var g = groups[c]; if (!g) return;
+      el('line', { x1: g[0], x2: g[1], y1: base + 12, y2: base + 12, 'class': 'sv-ax' }, s);
+      txt(s, (g[0] + g[1]) / 2, base + 30, 'Classe ' + c.toUpperCase(), 'sv-tb', 'middle');
+    });
+    txt(s, 40, 14, 'Percentual acumulado da receita', 'sv-t');
+  };
+
+  R.pdv = function (s) {
+    var r = rng(21);
+    el('line', { x1: 50, x2: 620, y1: 240, y2: 240, 'class': 'sv-ax' }, s);
+    el('line', { x1: 50, x2: 50, y1: 20, y2: 240, 'class': 'sv-ax' }, s);
+    var cl = [
+      { cx: 500, cy: 70, n: 14, f: 'sv-ftag sv-stroke' },
+      { cx: 330, cy: 140, n: 20, f: 'sv-fslate' },
+      { cx: 170, cy: 200, n: 22, f: 'sv-fsoft' }
+    ];
+    cl.forEach(function (c) {
+      for (var i = 0; i < c.n; i++) {
+        var x = Math.min(610, Math.max(62, c.cx + (r() - .5) * 110));
+        var y = Math.min(230, Math.max(30, c.cy + (r() - .5) * 70));
+        el('circle', { cx: x, cy: y, r: 5.5, 'class': c.f }, s);
+      }
+    });
+    txt(s, 335, 272, 'Potencial de sell-out', 'sv-t', 'middle');
+    var yl = txt(s, 0, 0, 'Frequência de visita', 'sv-t', 'middle');
+    yl.setAttribute('transform', 'translate(16,130) rotate(-90)');
+    [['Prioridade alta', 'sv-ftag sv-stroke'], ['Prioridade média', 'sv-fslate'], ['Prioridade baixa', 'sv-fsoft']].forEach(function (l, i) {
+      el('circle', { cx: 70 + i * 130, cy: 16, r: 5.5, 'class': l[1] }, s);
+      txt(s, 80 + i * 130, 20, l[0]);
+    });
+  };
+
+  R.flow = function (s) {
+    var labels = [['Base de', 'vendas'], ['Critérios', 'da campanha'], ['Conciliação', 'de cadastros'], ['Apuração', 'mensal'], ['Auditoria', 'dupla']];
+    labels.forEach(function (l, i) { arrow(s, i * 128, 10, 122, 54, l, i === 4 ? 'tag' : 'ink'); });
+    txt(s, 0, 108, 'Conferência entre apurado e auditado', 'sv-tb');
+    var rows = [['Critério A', 300, 300], ['Critério B', 240, 240], ['Critério C', 180, 205]];
+    rows.forEach(function (rw, i) {
+      var y = 130 + i * 40;
+      txt(s, 0, y + 14, rw[0]);
+      el('rect', { x: 90, y: y, width: rw[1], height: 11, 'class': 'sv-fink' }, s);
+      el('rect', { x: 90, y: y + 14, width: rw[2], height: 11, 'class': 'sv-fsoft' }, s);
+      if (rw[1] !== rw[2]) {
+        el('circle', { cx: 90 + rw[2] + 16, cy: y + 13, r: 7, 'class': 'sv-ftag sv-stroke' }, s);
+        txt(s, 90 + rw[2] + 30, y + 17, 'diferença investigada', 'sv-tb');
+      }
+    });
+    el('rect', { x: 420, y: 130, width: 10, height: 10, 'class': 'sv-fink' }, s); txt(s, 436, 139, 'Apurado');
+    el('rect', { x: 500, y: 130, width: 10, height: 10, 'class': 'sv-fsoft' }, s); txt(s, 516, 139, 'Auditado');
+  };
+
+  R.fc = function (s) {
+    var n = 36, x0 = 40, x1 = 500;
+    function X(t) { return x0 + t * (x1 - x0) / (n - 1); }
+    function Y(v) { return 220 - (v - 80) * 2.4; }
+    function base(t) { return 100 + 1.2 * t + 12 * Math.sin(2 * Math.PI * t / 12); }
+    var r = rng(7), hist = [], t, i;
+    for (t = 0; t < 24; t++) hist.push(base(t) + (r() - .5) * 7);
+    el('rect', { x: X(18), y: 20, width: X(23) - X(18), height: 200, 'class': 'sv-fpaper' }, s);
+    txt(s, (X(18) + X(23)) / 2, 34, 'backtesting', 'sv-t', 'middle');
+    el('line', { x1: x0, x2: 560, y1: 220, y2: 220, 'class': 'sv-ax' }, s);
+    el('line', { x1: X(23.5), x2: X(23.5), y1: 20, y2: 220, 'class': 'sv-dash' }, s);
+    txt(s, X(23.5) + 5, 34, 'hoje');
+    poly(s, 'sv-hist', hist.map(function (v, k) { return [X(k), Y(v)]; }));
+    var mean = hist.slice(18).reduce(function (a, b) { return a + b; }, 0) / 6;
+    var m1 = [], m2 = [], m3 = [];
+    for (t = 24; t < n; t++) {
+      m1.push([X(t), Y(106 + 1.2 * t)]);
+      m2.push([X(t), Y(base(t) + 1)]);
+      m3.push([X(t), Y(mean + .15 * (t - 23))]);
+    }
+    poly(s, 'sv-m1', m1); poly(s, 'sv-m2', m2); poly(s, 'sv-m3', m3);
+    var labs = [['Regressão', m1[m1.length - 1][1]], ['Sazonal', m2[m2.length - 1][1]], ['Média móvel', m3[m3.length - 1][1]]]
+      .sort(function (a, b) { return a[1] - b[1]; });
+    for (i = 1; i < labs.length; i++) if (labs[i][1] - labs[i - 1][1] < 15) labs[i][1] = labs[i - 1][1] + 15;
+    labs.forEach(function (l) { txt(s, x1 + 8, l[1] + 4, l[0], 'sv-tb'); });
+    txt(s, x0, 258, 'Meses', 'sv-t');
+    txt(s, x0, 14, 'Vendas (índice)', 'sv-t');
+  };
+
+  R.price = function (s) {
+    var rows = [['Loja online A', 92], ['Loja online B', 98], ['Loja online C', 104], ['Portal B2B A', 78], ['Portal B2B B', 81], ['Portal B2B C', 86]];
+    function X(v) { return 170 + (v - 70) * 11; }
+    el('line', { x1: X(100), x2: X(100), y1: 26, y2: 262, 'class': 'sv-dash' }, s);
+    txt(s, X(100), 16, 'referência = 100', 'sv-t', 'middle');
+    rows.forEach(function (rw, i) {
+      var y = 52 + i * 36 + (i >= 3 ? 16 : 0), b2b = i >= 3;
+      txt(s, 0, y + 4, rw[0], 'sv-tb');
+      el('line', { x1: X(100), x2: X(rw[1]), y1: y, y2: y, 'class': 'sv-ax' }, s);
+      el('circle', { cx: X(rw[1]), cy: y, r: 7, 'class': (b2b ? 'sv-ftag' : 'sv-fink') + ' sv-stroke' }, s);
+      var d = rw[1] - 100;
+      txt(s, X(rw[1]) + (d < 0 ? -14 : 14), y + 4, (d > 0 ? '+' : '') + d + '%', 'sv-t', d < 0 ? 'end' : 'start');
+    });
+    txt(s, 0, 284, 'Índice de preço por canal, com o preço de referência igual a 100', 'sv-t');
+  };
+
+  R.arch = function (s) {
+    el('path', { d: 'M 20 22 H 525 V 62', 'class': 'sv-dash' }, s);
+    txt(s, 270, 16, 'Acesso direto: bloqueado', 'sv-t', 'middle');
+    el('circle', { cx: 525, cy: 42, r: 9, 'class': 'sv-ftag sv-stroke' }, s);
+    txt(s, 525, 46, '×', 'sv-ti', 'middle');
+    arrow(s, 0, 50, 150, 56, ['Formulário', 'público'], 'ink');
+    arrow(s, 170, 50, 175, 56, ['Função no banco', '(controlada)'], 'ink');
+    arrow(s, 0, 140, 150, 56, ['Painel', 'administrativo'], 'ink');
+    arrow(s, 170, 140, 175, 56, ['Função com', 'senha em hash'], 'ink');
+    el('rect', { x: 430, y: 66, width: 190, height: 130, 'class': 'sv-fwhite sv-stroke' }, s);
+    txt(s, 525, 120, 'Tabelas', 'sv-tb', 'middle');
+    txt(s, 525, 138, 'sem acesso direto', 'sv-t', 'middle');
+    txt(s, 525, 154, 'do público', 'sv-t', 'middle');
+    el('line', { x1: 345, y1: 78, x2: 428, y2: 110, 'class': 'sv-ax' }, s);
+    el('line', { x1: 345, y1: 168, x2: 428, y2: 150, 'class': 'sv-ax' }, s);
+  };
+
+  document.querySelectorAll('svg[data-viz]').forEach(function (s) {
+    var f = R[s.getAttribute('data-viz')];
+    if (f) f(s);
+  });
+
+  /* ---------- Visualizador de casos ---------- */
+  var tabs = [].slice.call(document.querySelectorAll('.tab'));
+  var panels = [].slice.call(document.querySelectorAll('.panel'));
+  function select(i, focus) {
+    tabs.forEach(function (t, k) {
+      var on = k === i;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      panels[k].hidden = !on;
+    });
+    if (focus) tabs[i].focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(i); });
+    t.addEventListener('keydown', function (e) {
+      var k = e.key, n = tabs.length, j = null;
+      if (k === 'ArrowDown' || k === 'ArrowRight') j = (i + 1) % n;
+      else if (k === 'ArrowUp' || k === 'ArrowLeft') j = (i - 1 + n) % n;
+      else if (k === 'Home') j = 0;
+      else if (k === 'End') j = n - 1;
+      if (j !== null) { e.preventDefault(); select(j, true); }
+    });
+  });
+  if (tabs.length) select(0);
+
+  /* ---------- Filtro por etapa ---------- */
+  var chips = [].slice.call(document.querySelectorAll('.chip')), active = null;
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      var st = c.getAttribute('data-stage');
+      active = active === st ? null : st;
+      chips.forEach(function (o) { o.setAttribute('aria-pressed', o.getAttribute('data-stage') === active ? 'true' : 'false'); });
+      var firstMatch = -1, current = tabs.findIndex(function (t) { return t.getAttribute('aria-selected') === 'true'; });
+      tabs.forEach(function (t, k) {
+        var has = !active || t.getAttribute('data-stages').split(' ').indexOf(active) > -1;
+        t.classList.toggle('dim', !has);
+        if (has && firstMatch < 0) firstMatch = k;
+      });
+      if (active && tabs[current] && tabs[current].classList.contains('dim') && firstMatch > -1) select(firstMatch);
+    });
+  });
+})();
+</script>
 </body>
 </html>
