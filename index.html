@@ -141,39 +141,38 @@
   .sv-m3 { stroke: var(--soft); stroke-width: 3; fill: none; }
   .sv-stroke { stroke: var(--ink); stroke-width: 1.5; }
 
-  /* Trajetória em escala de tempo */
-  .gantt { margin-top: 2.5rem; }
-  .g-axis, .g-row { display: grid; grid-template-columns: 26rem minmax(0, 1fr); gap: 0 2.5rem; }
-  .g-axis { height: 1.5rem; }
-  .g-scale { position: relative; }
-  .g-scale span { position: absolute; top: 0; padding-left: .3rem; font: 500 .8rem var(--sans); color: var(--slate); }
-  .g-row { padding: .95rem 0; border-top: 1px solid var(--line); align-items: center; }
-  .g-text strong { display: block; font: 700 1.05rem/1.3 var(--sans); }
-  .g-text .org { display: block; }
-  .g-text .when { display: block; margin-top: .15rem; font: 500 .85rem var(--sans); color: var(--slate); font-variant-numeric: tabular-nums; }
-  .g-text .what { display: block; margin-top: .35rem; font-size: .95rem; color: var(--slate); }
-  .g-track {
-    position: relative; height: 1.6rem;
-    background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
-    background-size: 17.3913% 100%;
+  /* Trajetória: linha contínua, sem quebras entre as empresas */
+  .line { list-style: none; margin: 3rem 0 0; padding: 0; }
+  .line li {
+    --dw: 10rem; --sp: 2.75rem;
+    position: relative; display: grid; grid-template-columns: var(--dw) var(--sp) minmax(0, 1fr); padding-bottom: 2.75rem;
   }
-  .g-bar { position: absolute; top: .3rem; height: 1rem; background: var(--ink); }
-  .g-bar.now { background: var(--tag); border: 2px solid var(--ink); clip-path: polygon(0 0, calc(100% - .5rem) 0, 100% 50%, calc(100% - .5rem) 100%, 0 100%); border: 0; box-shadow: inset 0 0 0 2px var(--ink); }
-  @media (max-width: 52rem) {
-    .g-axis { display: block; }
-    .g-axis > div:first-child { display: none; }
-    .g-row { grid-template-columns: 1fr; gap: .6rem; }
+  .line li::before { content: ""; position: absolute; left: calc(var(--dw) + var(--sp) / 2 - 1px); top: .95rem; bottom: -.95rem; width: 2px; background: var(--ink); }
+  .line li:last-child { padding-bottom: 0; }
+  .line li:last-child::before { display: none; }
+  .line .node {
+    position: absolute; left: calc(var(--dw) + var(--sp) / 2 - .7rem); top: .5rem; width: 1.4rem; height: 1rem; background: var(--ink);
+    clip-path: polygon(0 0, 60% 0, 100% 50%, 60% 100%, 0 100%);
   }
-
-
-  .g-list { margin: .6rem 0 0; padding-left: 1.1rem; font-size: .95rem; color: var(--ink); }
-  .g-list li { margin: .3rem 0; }
-  .g-row.lead { padding-top: 1.25rem; padding-bottom: 1.5rem; }
-  .g-row.lead .g-text strong { font-size: 1.25rem; }
-  .g-mark { position: absolute; top: .3rem; width: 1rem; height: 1rem; margin-left: -.5rem; background: var(--tag); outline: 2px solid var(--ink); transform: rotate(45deg) scale(.85); }
-  .g-legend { margin: 1.25rem 0 0; font: 500 .85rem var(--sans); color: var(--slate); display: flex; align-items: center; gap: .6rem; }
-  .g-legend i { display: inline-block; width: .8rem; height: .8rem; background: var(--tag); outline: 2px solid var(--ink); transform: rotate(45deg) scale(.85); }
-  .g-row.study .g-bar { background: var(--line); height: .35rem; top: .62rem; }
+  .line .now .node { background: var(--tag); width: 2rem; height: 1.5rem; left: calc(var(--dw) + var(--sp) / 2 - 1rem); top: .25rem; }
+  .line .origin .node { background: var(--soft); }
+  .line .d { grid-column: 1; text-align: right; padding-right: .25rem; font: 600 .95rem/1.4 var(--sans); font-variant-numeric: tabular-nums; }
+  .line .d small { display: block; font: 500 .82rem/1.3 var(--sans); color: var(--slate); }
+  .line .c { grid-column: 3; min-width: 0; }
+  .line .c strong { display: block; font: 700 1.1rem/1.3 var(--sans); }
+  .line .now .c strong { font-size: 1.4rem; letter-spacing: -.01em; }
+  .line .org { display: block; color: var(--slate); }
+  .line .what { display: block; margin-top: .5rem; max-width: 40rem; }
+  .line .g-list { margin: .75rem 0 0; padding-left: 1.1rem; max-width: 40rem; }
+  .line .g-list li { display: list-item; padding: 0; margin: .3rem 0; }
+  .line .g-list li::before { display: none; }
+  .mile { display: inline-block; margin-top: .75rem; padding: .25rem 1.1rem .25rem .7rem; background: var(--tag); font: 600 .82rem/1.2 var(--sans); clip-path: polygon(0 0, calc(100% - .5rem) 0, 100% 50%, calc(100% - .5rem) 100%, 0 100%); }
+  @media (max-width: 40rem) {
+    .line li { --dw: 0rem; --sp: 1.75rem; }
+    .line .d { grid-column: 3; text-align: left; padding: 0 0 .15rem; }
+    .line .c { grid-row: 2; }
+    .line .now .node { top: .2rem; }
+  }
 
   /* Método e formação */
   .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem clamp(2rem, 6vw, 5rem); margin-top: 2rem; }
@@ -352,20 +351,14 @@
 <section class="block" id="trajetoria" aria-labelledby="t-traj">
   <div class="wrap">
     <h2 id="t-traj">Cinco posições desde 2021, todas em análise de dados</h2>
-    <p class="intro">Sou formado em Marketing e migrei para dados em 2021. Desde então o escopo cresceu: de analista a coordenador de uma célula nacional, e das análises à construção das próprias ferramentas. A escala abaixo é proporcional ao tempo em cada posição.</p>
+    <p class="intro">Sou formado em Marketing e migrei para dados em 2021. Desde então o escopo cresceu: de analista a coordenador de uma célula nacional, e das análises à construção das próprias ferramentas.</p>
 
-    <div class="gantt">
-      <div class="g-axis" aria-hidden="true">
-        <div></div>
-        <div class="g-scale">
-          <span style="left:0%">2021</span><span style="left:17.39%">2022</span><span style="left:34.78%">2023</span>
-          <span style="left:52.17%">2024</span><span style="left:69.57%">2025</span><span style="left:86.96%">2026</span>
-        </div>
-      </div>
-
-      <div class="g-row lead">
-        <div class="g-text">
-          <strong>Analista de Inteligência Comercial</strong><span class="org">Yamá Cosméticos</span><span class="when">set/2025 até hoje, mais de um ano</span>
+    <ol class="line">
+      <li class="now">
+        <span class="d">set/2025 até hoje<small>mais de um ano</small></span>
+        <span class="node" aria-hidden="true"></span>
+        <div class="c">
+          <strong>Analista de Inteligência Comercial</strong><span class="org">Yamá Cosméticos</span>
           <span class="what">Transformo dados de sell-in e sell-out em inteligência acionável para a performance comercial em todos os canais, atendendo a liderança, as regionais e parceiros estratégicos.</span>
           <ul class="g-list">
             <li>Monitoramento da performance por produto, canal, linha, território e regional, e apoio às regionais na construção de planos táticos orientados por dados.</li>
@@ -375,34 +368,52 @@
             <li>Governança de dados e de ferramentas: qualificação das bases do ERP Protheus, aplicações web internas sobre Supabase e padrões de documentação e continuidade.</li>
           </ul>
         </div>
-        <div class="g-track" aria-hidden="true"><span class="g-bar now" style="left:81.16%;width:18.7%"></span></div>
-      </div>
-      <div class="g-row">
-        <div class="g-text"><strong>Coordenador de Backoffice e Inteligência de Mercado</strong><span class="org">Pharmexx</span><span class="when">dez/2024 a jul/2025, 8 meses</span><span class="what">Coordenação nacional da célula de backoffice e da governança dos fluxos de dados que sustentavam a equipe de campo no canal Farma, em redes e PDVs independentes. Pipelines em VBA, Python e Power Query, automação de KPIs de execução, monitoramento de SLAs e segmentação de PDVs para otimizar rotas. O painel em Power BI foi apresentado em convenção nacional, em abril de 2025.</span></div>
-        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:68.12%;width:11.59%"></span><span class="g-mark" style="left:73.9%" title="Convenção nacional, abr/2025"></span></div>
-      </div>
-      <div class="g-row">
-        <div class="g-text"><strong>Analista de Inteligência Comercial e Mercado</strong><span class="org">Super Troco</span><span class="when">set/2023 a jul/2024, 11 meses</span><span class="what">Criação e monitoramento de KPIs, análise de performance de parcerias e de campanhas de incentivo, e reports diários, semanais e mensais para o comercial e a gestão. Automação da extração e do envio de relatórios com Excel (VBA) e Power BI.</span></div>
-        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:47.1%;width:15.22%"></span></div>
-      </div>
-      <div class="g-row">
-        <div class="g-text"><strong>Analista de Inteligência de Mercado e E-commerce</strong><span class="org">Grupo DBN</span><span class="when">abr/2022 a set/2023, 18 meses</span><span class="what">Responsável pelo e-commerce do grupo na Amazon: métricas e KPIs, acompanhamento de vendas, análise de tendências e indicadores de inteligência de mercado a partir de dados públicos e internos. Dashboards e automações em Excel para vendedores e para as áreas financeira, comercial e de compras.</span></div>
-        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:21.74%;width:25.36%"></span></div>
-      </div>
-      <div class="g-row">
-        <div class="g-text"><strong>Analista de Dados</strong><span class="org">DHL Express</span><span class="when">abr/2021 a dez/2021, 9 meses</span><span class="what">Transição de carreira do marketing para inteligência comercial e de mercado. Análises de performance do time de cobrança e atendimento financeiro, KPIs de Query Handling, forecast semanal e mensal de atendimentos, análises em SAP e automação de relatórios em VBA.</span></div>
-        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:4.35%;width:13.04%"></span></div>
-      </div>
-      <div class="g-row study">
-        <div class="g-text"><strong>Estudo em paralelo</strong><span class="org">Power BI, Python e ciência da computação</span><span class="when">2023 e 2024</span></div>
-        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:34.78%;width:34.78%"></span><span class="g-mark" style="left:43.5%" title="Power BI para BI e Python Fundamentos, 2023"></span><span class="g-mark" style="left:60.9%" title="Ciência da Computação com Python, 2024"></span></div>
-      </div>
-    </div>
-    <p class="g-legend"><i aria-hidden="true"></i> Losango amarelo: marco ou curso concluído no período.</p>
+      </li>
+      <li>
+        <span class="d">dez/2024 a jul/2025<small>8 meses</small></span>
+        <span class="node" aria-hidden="true"></span>
+        <div class="c">
+          <strong>Coordenador de Backoffice e Inteligência de Mercado</strong><span class="org">Pharmexx</span>
+          <span class="what">Coordenação nacional da célula de backoffice e da governança dos fluxos de dados que sustentavam a equipe de campo no canal Farma, em redes e PDVs independentes. Pipelines em VBA, Python e Power Query, automação de KPIs de execução, monitoramento de SLAs e segmentação de PDVs para otimizar rotas.</span>
+          <span class="mile">Painel em Power BI apresentado em convenção nacional, abr/2025</span>
+        </div>
+      </li>
+      <li>
+        <span class="d">set/2023 a jul/2024<small>11 meses</small></span>
+        <span class="node" aria-hidden="true"></span>
+        <div class="c">
+          <strong>Analista de Inteligência Comercial e Mercado</strong><span class="org">Super Troco</span>
+          <span class="what">Criação e monitoramento de KPIs, análise de performance de parcerias e de campanhas de incentivo, e reports diários, semanais e mensais para o comercial e a gestão. Automação da extração e do envio de relatórios com Excel (VBA) e Power BI.</span>
+        </div>
+      </li>
+      <li>
+        <span class="d">abr/2022 a set/2023<small>18 meses</small></span>
+        <span class="node" aria-hidden="true"></span>
+        <div class="c">
+          <strong>Analista de Inteligência de Mercado e E-commerce</strong><span class="org">Grupo DBN</span>
+          <span class="what">Responsável pelo e-commerce do grupo na Amazon: métricas e KPIs, acompanhamento de vendas, análise de tendências e indicadores de inteligência de mercado a partir de dados públicos e internos. Dashboards e automações em Excel para vendedores e para as áreas financeira, comercial e de compras.</span>
+        </div>
+      </li>
+      <li>
+        <span class="d">abr/2021 a dez/2021<small>9 meses</small></span>
+        <span class="node" aria-hidden="true"></span>
+        <div class="c">
+          <strong>Analista de Dados</strong><span class="org">DHL Express</span>
+          <span class="what">Transição de carreira do marketing para inteligência comercial e de mercado. Análises de performance do time de cobrança e atendimento financeiro, KPIs de Query Handling, forecast semanal e mensal de atendimentos, análises em SAP e automação de relatórios em VBA.</span>
+        </div>
+      </li>
+      <li class="origin">
+        <span class="d">2015</span>
+        <span class="node" aria-hidden="true"></span>
+        <div class="c">
+          <strong>Graduação em Marketing</strong><span class="org">UNIP</span>
+          <span class="what">O ponto de partida, antes da migração para dados.</span>
+        </div>
+      </li>
+    </ol>
 
-    <h3 style="margin:3.5rem 0 0;font:700 1.25rem/1.2 var(--sans)">Formação</h3>
+    <h3 style="margin:3.5rem 0 0;font:700 1.25rem/1.2 var(--sans)">Formação em dados</h3>
     <ul class="courses">
-      <li><strong>Graduação em Marketing</strong><br><span>UNIP, 2015</span></li>
       <li><strong>Ciência da Computação com Python</strong><br><span>USP, via Coursera, 2024</span></li>
       <li><strong>Power BI para Business Intelligence</strong><br><span>Data Science Academy, 2023</span></li>
       <li><strong>Python Fundamentos</strong><br><span>Senac SP, 2023</span></li>
