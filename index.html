@@ -193,11 +193,20 @@
   .contact a:hover { color: var(--ink); }
   .contact-links { display: flex; flex-wrap: wrap; gap: 1rem; }
   .btn {
-    display: inline-flex; align-items: center; height: 3rem; padding: 0 2rem 0 1.25rem; background: var(--tag); color: var(--ink);
-    text-decoration: none; font: 700 1rem var(--sans);
-    clip-path: polygon(0 0, calc(100% - .9rem) 0, 100% 50%, calc(100% - .9rem) 100%, 0 100%);
+    display: inline-flex; align-items: center; gap: .9rem; min-height: 3.9rem; padding: .6rem 2.6rem .6rem .7rem;
+    background: var(--tag); color: var(--ink); text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 50%, calc(100% - 1rem) 100%, 0 100%);
   }
   .btn:hover { background: #fff; }
+  .btn .ic { display: grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--ink); color: var(--tag); }
+  .btn:hover .ic { color: #fff; }
+  .btn .ico { width: 1.35rem; height: 1.35rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .btn .lbl b { display: block; font: 700 1.05rem/1.15 var(--sans); }
+  .btn .lbl small { display: block; margin-top: .15rem; font: 500 .82rem/1.2 var(--sans); color: var(--slate); }
+  @media (prefers-reduced-motion: no-preference) {
+    .btn .ic { transition: transform .2s; }
+    .btn:hover .ic { transform: rotate(-8deg) scale(1.06); }
+  }
   .contact .side { margin: 2rem 0 0; font-size: .95rem; color: var(--soft); }
   .site-foot { padding: 1.5rem 0 2.5rem; font: 500 .875rem var(--sans); color: var(--slate); }
 </style>
@@ -343,7 +352,7 @@
 <section class="block" id="trajetoria" aria-labelledby="t-traj">
   <div class="wrap">
     <h2 id="t-traj">Cinco posições desde 2021, todas em análise de dados</h2>
-    <p class="intro">O escopo cresceu ao longo do caminho: de analista a coordenador de uma célula nacional, e das análises à construção das próprias ferramentas. A escala abaixo é proporcional ao tempo em cada posição.</p>
+    <p class="intro">Sou formado em Marketing e migrei para dados em 2021. Desde então o escopo cresceu: de analista a coordenador de uma célula nacional, e das análises à construção das próprias ferramentas. A escala abaixo é proporcional ao tempo em cada posição.</p>
 
     <div class="gantt">
       <div class="g-axis" aria-hidden="true">
@@ -357,47 +366,49 @@
       <div class="g-row lead">
         <div class="g-text">
           <strong>Analista de Inteligência Comercial</strong><span class="org">Yamá Cosméticos</span><span class="when">set/2025 até hoje, mais de um ano</span>
-          <span class="what">Faço a inteligência comercial da Diretoria Comercial, atendendo a operação de vendas, as gerências regionais e os relatórios executivos.</span>
+          <span class="what">Transformo dados de sell-in e sell-out em inteligência acionável para a performance comercial em todos os canais, atendendo a liderança, as regionais e parceiros estratégicos.</span>
           <ul class="g-list">
+            <li>Monitoramento da performance por produto, canal, linha, território e regional, e apoio às regionais na construção de planos táticos orientados por dados.</li>
             <li>Modelagem e painéis em Power BI: modelo em estrela, registro de regras de negócio e páginas como a Curva ABC de produtos.</li>
-            <li>Monitoramento de preços da concorrência em seis canais, com coleta automatizada e um relatório único.</li>
+            <li>Estudos de precificação e elasticidade, análises competitivas e monitoramento de preços da concorrência em seis canais, com coleta automatizada.</li>
             <li>Apuração mensal de campanhas de incentivo, com auditoria de cada fórmula, e previsão de vendas para o S&amp;OP.</li>
-            <li>Governança de dados do ERP Protheus e ferramentas web internas sobre Supabase.</li>
-            <li>Padrões de documentação e de continuidade, para que as ferramentas não dependam de uma pessoa só.</li>
+            <li>Governança de dados e de ferramentas: qualificação das bases do ERP Protheus, aplicações web internas sobre Supabase e padrões de documentação e continuidade.</li>
           </ul>
         </div>
         <div class="g-track" aria-hidden="true"><span class="g-bar now" style="left:81.16%;width:18.7%"></span></div>
       </div>
       <div class="g-row">
-        <div class="g-text"><strong>Coordenador de Backoffice e Inteligência de Mercado</strong><span class="org">Pharmexx</span><span class="when">dez/2024 a jul/2025, 8 meses</span><span class="what">Liderança da célula nacional de backoffice e da governança de dados no canal Farma. Pipelines, KPIs e segmentação de PDVs alimentaram um painel apresentado em convenção nacional, em abril de 2025.</span></div>
+        <div class="g-text"><strong>Coordenador de Backoffice e Inteligência de Mercado</strong><span class="org">Pharmexx</span><span class="when">dez/2024 a jul/2025, 8 meses</span><span class="what">Coordenação nacional da célula de backoffice e da governança dos fluxos de dados que sustentavam a equipe de campo no canal Farma, em redes e PDVs independentes. Pipelines em VBA, Python e Power Query, automação de KPIs de execução, monitoramento de SLAs e segmentação de PDVs para otimizar rotas. O painel em Power BI foi apresentado em convenção nacional, em abril de 2025.</span></div>
         <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:68.12%;width:11.59%"></span><span class="g-mark" style="left:73.9%" title="Convenção nacional, abr/2025"></span></div>
       </div>
       <div class="g-row">
-        <div class="g-text"><strong>Analista de Inteligência Comercial e Mercado</strong><span class="org">Super Troco</span><span class="when">set/2023 a jul/2024, 11 meses</span></div>
+        <div class="g-text"><strong>Analista de Inteligência Comercial e Mercado</strong><span class="org">Super Troco</span><span class="when">set/2023 a jul/2024, 11 meses</span><span class="what">Criação e monitoramento de KPIs, análise de performance de parcerias e de campanhas de incentivo, e reports diários, semanais e mensais para o comercial e a gestão. Automação da extração e do envio de relatórios com Excel (VBA) e Power BI.</span></div>
         <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:47.1%;width:15.22%"></span></div>
       </div>
       <div class="g-row">
-        <div class="g-text"><strong>Analista de Inteligência de Mercado e E-commerce</strong><span class="org">Grupo DBN</span><span class="when">abr/2022 a set/2023, 18 meses</span></div>
+        <div class="g-text"><strong>Analista de Inteligência de Mercado e E-commerce</strong><span class="org">Grupo DBN</span><span class="when">abr/2022 a set/2023, 18 meses</span><span class="what">Responsável pelo e-commerce do grupo na Amazon: métricas e KPIs, acompanhamento de vendas, análise de tendências e indicadores de inteligência de mercado a partir de dados públicos e internos. Dashboards e automações em Excel para vendedores e para as áreas financeira, comercial e de compras.</span></div>
         <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:21.74%;width:25.36%"></span></div>
       </div>
       <div class="g-row">
-        <div class="g-text"><strong>Analista de Dados</strong><span class="org">DHL Express</span><span class="when">abr/2021 a dez/2021, 9 meses</span></div>
+        <div class="g-text"><strong>Analista de Dados</strong><span class="org">DHL Express</span><span class="when">abr/2021 a dez/2021, 9 meses</span><span class="what">Transição de carreira do marketing para inteligência comercial e de mercado. Análises de performance do time de cobrança e atendimento financeiro, KPIs de Query Handling, forecast semanal e mensal de atendimentos, análises em SAP e automação de relatórios em VBA.</span></div>
         <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:4.35%;width:13.04%"></span></div>
       </div>
       <div class="g-row study">
         <div class="g-text"><strong>Estudo em paralelo</strong><span class="org">Power BI, Python e ciência da computação</span><span class="when">2023 e 2024</span></div>
-        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:34.78%;width:34.78%"></span><span class="g-mark" style="left:43.5%" title="Power BI para BI e Python Fundamentos, 2023"></span><span class="g-mark" style="left:60.9%" title="Python para Análise de Dados e Ciência da Computação com Python, 2024"></span></div>
+        <div class="g-track" aria-hidden="true"><span class="g-bar" style="left:34.78%;width:34.78%"></span><span class="g-mark" style="left:43.5%" title="Power BI para BI e Python Fundamentos, 2023"></span><span class="g-mark" style="left:60.9%" title="Ciência da Computação com Python, 2024"></span></div>
       </div>
     </div>
     <p class="g-legend"><i aria-hidden="true"></i> Losango amarelo: marco ou curso concluído no período.</p>
 
-    <h3 style="margin:3.5rem 0 0;font:700 1.25rem/1.2 var(--sans)">Formação em dados</h3>
+    <h3 style="margin:3.5rem 0 0;font:700 1.25rem/1.2 var(--sans)">Formação</h3>
     <ul class="courses">
+      <li><strong>Graduação em Marketing</strong><br><span>UNIP, 2015</span></li>
       <li><strong>Ciência da Computação com Python</strong><br><span>USP, via Coursera, 2024</span></li>
-      <li><strong>Python para Análise de Dados</strong><br><span>Data Science Academy, 2024</span></li>
       <li><strong>Power BI para Business Intelligence</strong><br><span>Data Science Academy, 2023</span></li>
       <li><strong>Python Fundamentos</strong><br><span>Senac SP, 2023</span></li>
+      <li><strong>Python para Análise de Dados</strong><br><span>Data Science Academy, em andamento</span></li>
     </ul>
+    <p style="margin:1.5rem 0 0;max-width:38rem;color:var(--slate)">Também fiz cursos de marketing e analytics na FGV Online, na Rock University, na Analytics Academy e no SEBRAE. Inglês intermediário, com leitura técnica.</p>
   </div>
 </section>
 
@@ -406,9 +417,14 @@
     <h2 id="t-contato">Vamos conversar sobre dados comerciais?</h2>
     <p>Inteligência comercial, BI, precificação, previsão de vendas e automação de análises. Escolha o canal que preferir.</p>
     <div class="contact-links">
-      <!-- PREENCHER: troque o valor do LinkedIn abaixo. Links com "PREENCHER" ficam ocultos automaticamente. -->
-      <a class="btn" href="mailto:caiomancuso85@gmail.com">E-mail</a>
-      <a class="btn" data-pending href="https://www.linkedin.com/in/PREENCHER-SEU-PERFIL/" rel="noopener">LinkedIn</a>
+      <a class="btn" href="mailto:caiomancuso85@gmail.com">
+        <span class="ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7 12 13.2 20.5 7"/></svg></span>
+        <span class="lbl"><b>E-mail</b><small>caiomancuso85@gmail.com</small></span>
+      </a>
+      <a class="btn" href="https://www.linkedin.com/in/caio-mancuso-52523872" rel="noopener">
+        <span class="ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M8 10.5V16M8 7.6v.01M12 16v-5.5M12 12.6c0-1.4 1-2.3 2.3-2.3s2.2.9 2.2 2.4V16"/></svg></span>
+        <span class="lbl"><b>LinkedIn</b><small>Ver perfil e experiência</small></span>
+      </a>
     </div>
     <p class="side" data-pending-wrap>Também ensino Excel do zero à análise de dados. <a data-pending href="PREENCHER-LINK-DO-CURSO" rel="noopener">Ver o curso na Hotmart</a>.</p>
   </div>
