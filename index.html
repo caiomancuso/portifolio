@@ -235,7 +235,7 @@
 <section class="block" id="casos" aria-labelledby="t-casos">
   <div class="wrap">
     <h2 id="t-casos">Sem número que eu não sustento</h2>
-    <p class="intro">Escolhi os seis casos que melhor mostram como eu trabalho. As ilustrações usam dados fictícios: nenhum valor, cliente, representante ou tela real da empresa aparece aqui.</p>
+    <p class="intro">Escolhi os sete casos que melhor mostram como eu trabalho. As ilustrações usam dados fictícios: nenhum valor, cliente, representante ou tela real da empresa aparece aqui.</p>
 
     <div class="filter" role="group" aria-label="Filtrar casos por etapa do dado">
       <span>Etapa do dado</span>
@@ -253,6 +253,7 @@
         <button class="tab" role="tab" id="tab-sop" aria-controls="p-sop" data-stages="3 4"><span class="t"><span class="hl">Previsão de vendas 2027 para o S&amp;OP</span></span><span class="m">Em andamento, análise e decisão</span></button>
         <button class="tab" role="tab" id="tab-mon" aria-controls="p-mon" data-stages="1 2"><span class="t"><span class="hl">Monitor de preços da concorrência</span></span><span class="m">Em produção, coleta e estruturação</span></button>
         <button class="tab" role="tab" id="tab-web" aria-controls="p-web" data-stages="1 4"><span class="t"><span class="hl">Aplicações web sobre Supabase</span></span><span class="m">Em produção, coleta e decisão</span></button>
+        <button class="tab" role="tab" id="tab-orders" aria-controls="p-orders" data-stages="1 2 4"><span class="t"><span class="hl">Robô de acompanhamento de pedidos de venda</span></span><span class="m">Em produção, coleta, estruturação e decisão</span></button>
       </div>
 
       <div class="panels">
@@ -326,6 +327,18 @@
           <p><strong>A decisão.</strong> No cadastro, o formulário público só escreve no banco por funções controladas (SECURITY DEFINER), sem acesso direto às tabelas. O CNPJ é validado, os contatos são obrigatórios já no banco e o painel administrativo usa senha com hash. No scorecard, os critérios têm peso, a nota final é calculada automaticamente e cada avaliação sai em PDF.</p>
           <p><strong>O que ficou de pé.</strong> Duas aplicações publicadas, com README e guia de uso, e anotações sobre as armadilhas de segurança do Supabase que descobri no caminho.</p>
           <p class="stack">Supabase (Postgres), JavaScript, GitHub Pages</p>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-orders" aria-labelledby="tab-orders" tabindex="0" hidden>
+          <h3>Robô de acompanhamento de pedidos de venda</h3>
+          <figure class="figure">
+            <svg viewBox="0 0 640 262" data-viz="orders" role="img" aria-label="Fluxo de cinco passos, do relatório ao aviso por e-mail, e barras com a quantidade de pedidos em aberto por etapa em que estão parados, com a maior parada destacada"></svg>
+            <figcaption>Ilustração com dados fictícios: do relatório ao aviso por e-mail, e pedidos em aberto por etapa.</figcaption>
+          </figure>
+          <p><strong>O problema.</strong> Todo dia a diretoria comercial perguntava quantos pedidos havia no mês e em que etapa cada um estava parado. Os dados existiam em um relatório de Power BI dividido em três operações, mas meu acesso era só de visualização, sem API nem conexão ao modelo. Alguém precisava exportar as tabelas à mão e montar o quadro no Excel.</p>
+          <p><strong>A decisão.</strong> Construí um robô que percorre o relatório como uma pessoa faria, limpa os filtros que sessões anteriores deixaram, exporta a tabela de cada operação e consolida tudo duas vezes por dia. Com a diretoria, defini o que é "parado": a primeira data em branco na rotina de liberação de cada empresa, cuja ordem o robô lê do próprio relatório. Transferências entre empresas do grupo ficam fora da contagem. Antes de entrar em produção, conferi o consolidado no Excel contra o cálculo em Python, sem divergência.</p>
+          <p><strong>O que ficou de pé.</strong> Ninguém mais exporta tabela à mão. A cada execução saem um consolidado datado, com resumo executivo e documentação técnica, uma base crua em CSV, um histórico do ano e um e-mail com o resumo do dia para a equipe. O quadro mostra quantos pedidos estão em cada etapa, por empresa, e qual é a maior parada.</p>
+          <p class="stack">Python, Playwright, pandas, Excel, agendador de tarefas do Windows</p>
         </article>
       </div>
     </div>
@@ -623,6 +636,24 @@
     txt(s, 525, 154, 'do público', 'sv-t', 'middle');
     el('line', { x1: 345, y1: 78, x2: 428, y2: 110, 'class': 'sv-ax' }, s);
     el('line', { x1: 345, y1: 168, x2: 428, y2: 150, 'class': 'sv-ax' }, s);
+  };
+
+  R.orders = function (s) {
+    var steps = [['Relatório', 'no BI'], ['Exportação', 'da tabela'], ['Regra de', 'etapa'], ['Consolidado', 'no SharePoint'], ['Aviso', 'por e-mail']];
+    steps.forEach(function (l, i) { arrow(s, i * 128, 10, 122, 54, l, i === 4 ? 'tag' : 'ink'); });
+    txt(s, 0, 100, 'Pedidos em aberto, por etapa em que estão parados', 'sv-tb');
+    var rows = [['Liberação comercial', 62], ['Liberação financeira', 9], ['Emissão de NF', 74], ['Saída da mercadoria', 41], ['Em trânsito', 88]];
+    var mx = 0;
+    rows.forEach(function (rw) { if (rw[1] > mx) mx = rw[1]; });
+    rows.forEach(function (rw, i) {
+      var y = 118 + i * 28, w = rw[1] / 100 * 320, top = rw[1] === mx;
+      txt(s, 0, y + 11, rw[0]);
+      el('rect', { x: 170, y: y, width: w, height: 14, 'class': top ? 'sv-fink' : 'sv-fsoft' }, s);
+      if (top) {
+        el('circle', { cx: 170 + w + 16, cy: y + 7, r: 7, 'class': 'sv-ftag sv-stroke' }, s);
+        txt(s, 170 + w + 30, y + 11, 'maior parada', 'sv-tb');
+      }
+    });
   };
 
   document.querySelectorAll('svg[data-viz]').forEach(function (s) {
