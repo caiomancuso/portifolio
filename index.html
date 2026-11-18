@@ -48,6 +48,7 @@ button{font:inherit;color:inherit}
 .chip{height:2.75rem;padding:0 1.5rem 0 .8rem;font-weight:600;font-size:.95rem}
 
 /* abertura */
+.hero-wrap{overflow-x:clip}
 .hero{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(2rem,5vw,4.5rem);padding:clamp(2rem,6vw,5rem) 0 clamp(3rem,7vw,6rem)}
 .hero-txt{flex:1.25 1 26rem;min-width:0}
 h1{margin:0;font:700 clamp(2.5rem,5.6vw,4.75rem)/1 var(--sans);letter-spacing:-.035em}
@@ -55,12 +56,20 @@ h1 .w{display:inline-block;margin-right:.24em}
 .mark{background:linear-gradient(transparent 62%,var(--tag) 62%)}
 .lede{max-width:32rem;margin:clamp(1.5rem,3vw,2.5rem) 0 0;font-size:1.18rem}
 .hero-viz{flex:1 1 23rem;min-width:0;display:flex;flex-direction:column;gap:1.4rem}
-.scene{position:relative;width:100%;max-width:31rem;aspect-ratio:22/15;margin:0 auto}
-.blob{position:absolute;inset:-9% -6%;background:#fff;border-radius:58% 42% 55% 45%/48% 56% 44% 52%;transform:translate(calc(var(--mx,0)*22px),calc(var(--my,0)*22px));transition:transform .5s ease-out}
-.dots{position:absolute;inset:0;transform:translate(calc(var(--mx,0)*-10px),calc(var(--my,0)*-10px));transition:transform .5s ease-out}
-.dot{position:absolute;transition:left .8s var(--ease),top .8s var(--ease),width .8s var(--ease),height .8s var(--ease),border-radius .8s,background .6s,opacity .6s}
+.scene{position:relative;width:100%;max-width:31rem;aspect-ratio:22/15;margin:0 auto;perspective:900px}
+.sway,.tilt{position:absolute;inset:0;transform-style:preserve-3d}
+.tilt{transform:rotateY(calc(var(--mx,0)*34deg)) rotateX(calc(var(--my,0)*-26deg));transition:transform .45s ease-out}
+.cube{--c:84px;--cz:70px;position:absolute;right:4%;top:-4%;width:var(--c);height:var(--c);transform-style:preserve-3d;transform:translateZ(var(--cz)) rotateX(-20deg) rotateY(var(--rot,0deg));transition:transform .9s cubic-bezier(.3,.9,.2,1)}
+.face{position:absolute;inset:0;display:grid;place-items:center;text-align:center;border:1.5px solid var(--paper);background:var(--ink);color:var(--paper);font:700 .75rem/1.15 var(--sans);backface-visibility:hidden}
+.face.f1{transform:rotateY(0deg) translateZ(calc(var(--c)/2))}.face.f2{transform:rotateY(90deg) translateZ(calc(var(--c)/2))}
+.face.f3{transform:rotateY(180deg) translateZ(calc(var(--c)/2))}.face.f4{transform:rotateY(270deg) translateZ(calc(var(--c)/2))}
+.face.f5{transform:rotateX(90deg) translateZ(calc(var(--c)/2));background:var(--tag)}.face.f6{transform:rotateX(-90deg) translateZ(calc(var(--c)/2));background:var(--tag)}
+@media (max-width:40rem){.cube{--c:56px;--cz:30px;top:4%;right:8%}.face{font-size:.58rem}}
+.blob{position:absolute;inset:-9% -6%;background:#fff;border-radius:58% 42% 55% 45%/48% 56% 44% 52%;transform:translateZ(-70px)}
+.dots{position:absolute;inset:0;transform-style:preserve-3d}
+.dot{position:absolute;transition:transform .9s cubic-bezier(.3,.9,.2,1),left .8s var(--ease),top .8s var(--ease),width .8s var(--ease),height .8s var(--ease),border-radius .8s,background .6s,opacity .6s}
 .axis{position:absolute;left:3%;right:3%;top:90%;height:2px;background:var(--ink);opacity:0;transition:opacity .5s}
-.flag{position:absolute;left:13%;top:3%;padding:.3rem 1.25rem .3rem .6rem;background:var(--tag);font:700 .8rem/1.2 var(--sans);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%);opacity:0;transition:opacity .5s}
+.flag{position:absolute;left:13%;top:3%;padding:.3rem 1.25rem .3rem .6rem;background:var(--tag);font:700 .8rem/1.2 var(--sans);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%);opacity:0;transform:translateZ(110px);transition:opacity .5s}
 .stages{position:relative;display:flex;gap:.5rem;flex-wrap:wrap}
 .belt{position:absolute;left:0;right:0;top:1.3rem;height:2px;background-image:repeating-linear-gradient(90deg,var(--soft) 0 10px,transparent 10px 20px)}
 .stg{position:relative;flex:1 1 6.25rem;height:2.75rem;padding:0 1.4rem 0 .75rem;text-align:left;font-weight:600;font-size:.95rem}
@@ -79,7 +88,7 @@ h3{font-family:var(--sans)}
 .shelf{display:flex;flex-wrap:wrap;gap:.6rem .25rem;margin:0 0 clamp(2rem,5vw,3.5rem)}
 .case-tag{min-height:3.5rem;padding:.5rem 1.9rem .5rem 1rem;font-weight:700;font-size:1.18rem;letter-spacing:-.01em;background:#fff}
 .viewer{display:flex;flex-wrap:wrap;gap:clamp(1.75rem,5vw,4.5rem);align-items:flex-start}
-.fig{flex:1 1 24rem;max-width:36rem;min-width:0;margin:0;background:#fff;padding:1.4rem 1.4rem 1.1rem;border-radius:36px 36px 36px 6px}
+.fig{transform-origin:0 50%;flex:1 1 24rem;max-width:36rem;min-width:0;margin:0;background:#fff;padding:1.4rem 1.4rem 1.1rem;border-radius:36px 36px 36px 6px}
 .fig svg{display:block;width:100%;height:auto;overflow:visible}
 .fig figcaption{margin-top:.75rem;font:500 .8rem var(--sans);color:var(--slate)}
 .detail{flex:1.1 1 24rem;min-width:0}
@@ -121,9 +130,11 @@ h3{font-family:var(--sans)}
 .board-head{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;margin:0 0 1rem;font:700 .95rem var(--sans);color:var(--soft)}
 .seal{display:inline-flex;align-items:center;height:2rem;padding:0 1.4rem 0 .75rem;font:700 .88rem var(--sans);color:var(--ink);background:var(--tag);clip-path:polygon(0 0,calc(100% - 11px) 0,100% 50%,calc(100% - 11px) 100%,0 100%);transition:background .35s}
 .seal.bad{background:var(--err)}
-.rows{display:flex;flex-direction:column;gap:.5rem}
+.rows{display:flex;flex-direction:column;gap:.5rem;transform-style:preserve-3d;transform-origin:0 50%;transition:transform .7s var(--ease)}
 .row{appearance:none;border:0;cursor:pointer;text-align:left;width:100%;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem .9rem;min-height:4.5rem;padding:.75rem 1rem;border-radius:4px 20px 20px 20px;color:var(--paper);background:rgba(255,255,255,.05);transition:background .35s,transform .25s var(--ease)}
-.row:hover{transform:translateX(6px)}
+.row{--z:0px;transform:translateZ(var(--z))}
+.row[aria-pressed="true"]{--z:30px}
+.row:hover{transform:translateZ(var(--z)) translateX(6px)}
 .row[aria-pressed="true"]{background:rgba(255,255,255,.16)}
 .row .txt{flex:1 1 9.5rem;min-width:0}
 .row .nm{display:block;font:700 1.06rem/1.25 var(--sans)}
@@ -179,7 +190,7 @@ h3{font-family:var(--sans)}
 .sheet .k{margin:0 0 .9rem;font:700 .88rem var(--sans);color:var(--slate)}
 .ck{appearance:none;border:0;background:none;cursor:pointer;text-align:left;display:flex;align-items:center;gap:.9rem;min-height:3rem;padding:.35rem 0;width:100%;font:600 1.06rem/1.3 var(--sans);transition:transform .2s}
 .ck:hover{transform:translateX(6px)}
-.ck .bx{flex:none;display:grid;place-items:center;width:30px;height:22px;background:var(--line);clip-path:polygon(0 0,68% 0,100% 50%,68% 100%,0 100%);transition:background .25s}
+.ck .bx{flex:none;display:grid;place-items:center;width:30px;height:22px;background:var(--line);clip-path:polygon(0 0,68% 0,100% 50%,68% 100%,0 100%);transition:background .25s,transform .7s var(--ease)}
 .ck .bx svg{margin-right:6px;opacity:0;transition:opacity .25s}
 .ck[aria-pressed="true"] .bx{background:var(--tag)}
 .ck[aria-pressed="true"] .bx svg{opacity:1}
@@ -190,6 +201,7 @@ h3{font-family:var(--sans)}
 /* trajetória */
 .segs{display:flex;margin:0 0 2.1rem}
 .seg{appearance:none;border:0;cursor:pointer;min-width:0;height:4rem;padding:0 1.25rem 0 1.5rem;text-align:left;font:700 .95rem var(--sans);white-space:nowrap;overflow:hidden;background:var(--line);clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%,16px 50%);transition:background .25s,color .25s,transform .25s}
+.seg{transform-origin:50% 100%}
 .seg+.seg{margin-left:-6px}
 .seg:hover{transform:translateY(-4px)}
 .seg.now{background:var(--ink);color:var(--paper)}
@@ -240,7 +252,17 @@ h1 .w{animation:up .8s var(--ease) both;animation-delay:calc(var(--i)*55ms)}
 .stg.auto .bar{animation:fillbar 3.4s linear forwards}
 .swap{animation:swap .45s var(--ease)}
 .pop{animation:pop .55s var(--ease) both;transform-box:fill-box;transform-origin:50% 100%}
-.run .rb{animation:bob .5s ease-in-out infinite alternate}
+.run .rb{animation:bob3 .9s ease-in-out infinite alternate}
+.sway{animation:sway 7s ease-in-out infinite alternate}
+.door{animation:door .75s var(--ease)}
+.lift{animation:lift .6s var(--ease)}
+.case-tag:hover{transform:perspective(500px) rotateX(-16deg) rotateY(9deg) translateY(-3px)}
+.rows{transform:perspective(1200px) rotateY(7deg) rotateX(2deg)}
+.rows:hover,.rows:focus-within{transform:perspective(1200px) rotateY(0deg) rotateX(0deg)}
+.ck[aria-pressed="true"] .bx{transform:perspective(200px) rotateY(360deg)}
+.seg:hover{transform:perspective(600px) rotateX(-20deg) translateY(-4px)}
+.seg[aria-pressed="true"]{transform:perspective(600px) rotateX(-14deg) translateY(-7px)}
+.btn:hover,.btn:focus-visible{transform:perspective(600px) rotateY(-14deg) translateX(8px)}
 .run .rb .a1{animation:swing .5s ease-in-out infinite alternate}
 .run .rb .a2{animation:swing .5s ease-in-out infinite alternate-reverse}
 .run .rb .l1{animation:march .5s linear infinite}
@@ -262,7 +284,11 @@ h1 .w{animation:up .8s var(--ease) both;animation-delay:calc(var(--i)*55ms)}
 @keyframes fillbar{from{width:0}to{width:calc(100% - 13px)}}
 @keyframes swap{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
-@keyframes rise{from{opacity:0;transform:translateY(48px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:perspective(1100px) rotateX(24deg) translateY(64px) scale(.95)}to{opacity:1;transform:perspective(1100px) rotateX(0deg) translateY(0) scale(1)}}
+@keyframes sway{from{transform:rotateY(-8deg) rotateX(4deg)}to{transform:rotateY(8deg) rotateX(-4deg)}}
+@keyframes bob3{from{transform:perspective(120px) rotateY(-32deg)}to{transform:perspective(120px) rotateY(32deg) translateY(-2px)}}
+@keyframes door{from{opacity:0;transform:perspective(1200px) rotateY(-62deg) translateX(-30px)}to{opacity:1;transform:perspective(1200px) rotateY(0deg) translateX(0)}}
+@keyframes lift{from{opacity:0;transform:perspective(1200px) rotateX(-26deg) translateY(24px)}to{opacity:1;transform:perspective(1200px) rotateX(0deg) translateY(0)}}
 @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes bob{to{transform:translateY(-2px)}}
 @keyframes swing{from{transform:rotate(-30deg)}to{transform:rotate(30deg)}}
@@ -278,7 +304,7 @@ h1 .w{animation:up .8s var(--ease) both;animation-delay:calc(var(--i)*55ms)}
 <div class="progress" aria-hidden="true"></div>
 <noscript><p>Esta página usa JavaScript para mostrar os casos e as ilustrações. Ative o JavaScript para ver o conteúdo completo.</p></noscript>
 
-<div class="wrap">
+<div class="wrap hero-wrap">
   <header class="site-head">
     <a class="wordmark" href="#topo">Caio Mancuso</a>
     <nav class="site-nav" aria-label="Principal">
@@ -297,9 +323,11 @@ h1 .w{animation:up .8s var(--ease) both;animation-delay:calc(var(--i)*55ms)}
         <p class="lede">Sou analista de inteligência comercial na Yamá Cosméticos. Conecto sell-in, sell-out, preço e cobertura nos canais Alimentar, Perfumaria e Farma, e construo as ferramentas quando o dado ainda não existe.</p>
       </div>
       <div class="hero-viz">
-        <div class="scene">
+        <div class="scene"><div class="sway"><div class="tilt">
           <div class="blob" aria-hidden="true"></div>
           <div class="dots" id="dots" role="img" aria-label=""><span class="axis"></span><span class="flag">prioridade</span></div>
+          <div class="cube" id="cube" aria-hidden="true"><span class="face f1">1<br>Coleta</span><span class="face f2">2<br>Estruturação</span><span class="face f3">3<br>Análise</span><span class="face f4">4<br>Decisão</span><span class="face f5"></span><span class="face f6"></span></div>
+        </div></div>
         </div>
         <div class="stages" role="group" aria-label="Etapas do dado">
           <div class="belt" aria-hidden="true"></div>
@@ -629,22 +657,26 @@ h1 .w{animation:up .8s var(--ease) both;animation-delay:calc(var(--i)*55ms)}
     stagesBox.appendChild(b); stageBtns.push(b);
   });
   function stopStage() { auto = false; clearInterval(stageTimer); }
+  var turn = 0;
   function setStage(n) {
-    stage = n;
+    var dlt = ((n - stage) % 4 + 4) % 4; if (dlt === 3) dlt = -1;
+    turn += dlt; stage = n;
+    $('cube').style.setProperty('--rot', (-turn * 90) + 'deg');
     var AR = 22 / 15;
     var sc = [[8, 12, 4], [30, 6, 3], [55, 16, 5], [78, 8, 3.5], [90, 30, 4], [66, 40, 3], [40, 34, 5], [16, 44, 4], [26, 70, 3.5], [50, 62, 4.5], [72, 72, 3], [88, 62, 4]];
     var H = [80, 66, 54, 44, 36, 30, 24, 20, 16, 13, 10, 8];
     dots.forEach(function (el, i) {
-      var x, y, w, hh, r, bg, o = 1;
-      if (n === 1) { x = sc[i][0]; y = sc[i][1]; w = sc[i][2]; hh = w * AR; r = '50%'; bg = [SOFT, SLATE, INK][i % 3]; }
-      else if (n === 2) { x = 16 + (i % 4) * 19; y = 12 + Math.floor(i / 4) * 27; w = 9; hh = 9 * AR; r = '24%'; bg = SLATE; }
+      var x, y, w, hh, r, bg, o = 1, z;
+      if (n === 1) { x = sc[i][0]; y = sc[i][1]; w = sc[i][2]; hh = w * AR; r = '50%'; bg = [SOFT, SLATE, INK][i % 3]; z = ((i * 37) % 7 - 2) * 24; }
+      else if (n === 2) { x = 16 + (i % 4) * 19; y = 12 + Math.floor(i / 4) * 27; w = 9; hh = 9 * AR; r = '24%'; bg = SLATE; z = 20; }
       else {
-        w = 5.6; hh = H[i] * 0.82; x = 5 + i * 7.8; y = 90 - hh; r = '3px 3px 0 0';
+        w = 5.6; hh = H[i] * 0.82; x = 5 + i * 7.8; y = 90 - hh; r = '3px 3px 0 0'; z = n === 4 ? (i < 3 ? 70 : 0) : 30;
         if (n === 3) bg = i < 3 ? INK : (i < 7 ? SLATE : SOFT);
         else { bg = i === 0 ? TAG : (i < 3 ? INK : SOFT); o = i < 3 ? 1 : 0.45; }
       }
       el.style.left = x + '%'; el.style.top = y + '%'; el.style.width = w + '%'; el.style.height = hh + '%';
       el.style.borderRadius = r; el.style.background = bg; el.style.opacity = o;
+      el.style.transform = 'translateZ(' + z + 'px)';
     });
     dotsBox.querySelector('.axis').style.opacity = n > 2 ? 1 : 0;
     dotsBox.querySelector('.flag').style.opacity = n === 4 ? 1 : 0;
@@ -700,6 +732,8 @@ h1 .w{animation:up .8s var(--ease) both;animation-delay:calc(var(--i)*55ms)}
     sel = i;
     var c = CASES[i];
     caseBtns.forEach(function (b, k) { b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+    var fig = document.querySelector('.fig');
+    fig.classList.remove('door'); void fig.offsetWidth; fig.classList.add('door');
     var svg = $('case-svg');
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     svg.setAttribute('viewBox', c.viewBox); svg.setAttribute('aria-label', c.alt);
@@ -719,7 +753,7 @@ h1 .w{animation:up .8s var(--ease) both;animation-delay:calc(var(--i)*55ms)}
     var arrs = box.querySelectorAll('.arr');
     arrs[0].addEventListener('click', function () { stepCase(-1); box.querySelectorAll('.arr')[0].focus(); });
     arrs[1].addEventListener('click', function () { stepCase(1); box.querySelectorAll('.arr')[1].focus(); });
-    box.classList.remove('swap'); void box.offsetWidth; box.classList.add('swap');
+    box.classList.remove('lift'); void box.offsetWidth; box.classList.add('lift');
   }
   setCase(0);
 
