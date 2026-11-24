@@ -197,6 +197,8 @@ h3{font-family:var(--sans)}
 .portrait .frame{position:absolute;inset:0;display:grid;place-items:center;padding:2.5rem;text-align:center;font:600 .95rem/1.4 var(--sans);color:var(--slate);background:repeating-linear-gradient(-45deg,#fff 0 12px,#E9EDF2 12px 24px);border:2px dashed var(--soft);border-radius:58% 42% 55% 45%/48% 56% 44% 52%}
 .portrait .name{position:absolute;left:-.5rem;bottom:8%;padding:.45rem 1.6rem .45rem .8rem;background:var(--tag);font:700 1rem var(--sans);clip-path:var(--arrow);transform:rotate(-4deg)}
 .about-txt{flex:1 1 24rem;min-width:0}
+.portrait .frame.photo{padding:0;border:0;overflow:hidden;background:var(--ink)}
+.portrait .frame.photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:38% 30%}
 .portrait .frame.mark{background:radial-gradient(120% 90% at 30% 20%,#22314F 0,var(--ink) 60%);border:0;padding:22%}
 .portrait .frame.mark svg{width:100%;height:auto;filter:drop-shadow(0 18px 30px rgba(0,0,0,.35))}
 @media (max-width:40rem){.portrait{flex-basis:100%;max-width:14rem;margin:0 auto}.portrait .name{left:0}}
@@ -474,7 +476,7 @@ html,body{overflow-x:clip}
 <section class="block" id="sobre" aria-labelledby="t-sobre">
   <div class="wrap about">
     <div class="portrait rv">
-      <div class="frame mark"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M12 24H64L88 50L64 76H12Z" fill="#F2F4F7" stroke="#F2F4F7" stroke-width="10" stroke-linejoin="round"/><circle cx="71" cy="50" r="5.5" fill="#FFD23F"/><path d="M35.36 40.04A13 13 0 1 0 35.36 59.96" fill="none" stroke="#101A2E" stroke-width="6.5" stroke-linecap="round"/><path d="M44 62V38L51 51L58 38V62" fill="none" stroke="#101A2E" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="frame photo"><img src="foto-caio.jpg" alt="Caio Mancuso trabalhando no notebook" width="720" height="900" loading="lazy" decoding="async"></div>
       <span class="name">Caio Mancuso</span>
     </div>
     <div class="about-txt rv">
